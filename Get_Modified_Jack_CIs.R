@@ -51,23 +51,36 @@ standardize <- function(areas, npsi){
 # Output: dataframe with jackknife resampled slopes and intercepts for the SAR
 # 
 stand_jack <- function(stand_df, npsi){
-  # Create empty df to append values
+  # Create empty vector to append values
   jack_res <- rep(NA, length(stand_df[,1]))
+  
+  # Create dataframes for predicting species richness at:
+  # Smallest island
+  small_df <- data.frame(x = 0)
+  # Largest island
+  large_df <- data.frame(x = 1)
+  
   # Remove one observation (make sure each one is left out once) and then
   # get the slope between smallest and largest islands
   for(i in c(1:length(stand_df[,1]))){
     # Remove ith row
     out_df <- stand_df[-i,]
     
-    # Find species richness value for smallest island
-    small_sp <- out_df[which(out_df$x == min(out_df$x)),]
+    # Create new linear model for prediction using out_df
+    new_model <- lm(y ~ x, data = out_df)
     
-    # Find species richness value for largest island
-    large_sp <- out_df[which(out_df$x == max(out_df$x)),]
+    # If npsi > 0, create segmented model
+    if(npsi > 0){
+      new_model <- segmented(new_model, seg.Z = ~x, npsi = npsi, control = seg.control(display = FALSE))
+    }
     
-    # Get slope between those two points?
+    # Now predict species richness at largest and smallest island using the new model
+    small <- predict(new_model, small_df)
+    large <- predict(new_model, large_df)
+    
+    # Get slope between the smallest and largest points
     # y2-y1 / x2-x1
-    jack_res[i] <- (large_sp$y - small_sp$y) / (large_sp$x - small_sp$x)
+    jack_res[i] <- (large[[1]] - small[[1]]) / (1 - 0)
   }
   
   return(jack_res)
@@ -180,28 +193,29 @@ points(anole_stand$x, anole_stand$y, pch = 19)
 ci_df <- data.frame()
 
 # Phelsuma
-phel_jack <- stand_jack(phel_stand)
+phel_jack <- stand_jack(phel_stand, 0)
 phel_CI <- quantile(phel_jack, c(0.025, 0.975))
 ci_df <- rbind(ci_df, c("Phelsuma", phel_CI[1], phel_CI[2]))
 
 # African Cichlids
-cich_jack <- stand_jack(cich_stand)
+cich_jack <- stand_jack(cich_stand, 0)
 cich_CI <- quantile(cich_jack, c(0.025, 0.975))
 ci_df <- rbind(ci_df, c("African Cichlids", cich_CI[1], cich_CI[2]))
 
 # Hawaiian Silverswords
-silver_jack <- stand_jack(silver_stand)
+silver_jack <- stand_jack(silver_stand, 0)
 silver_CI <- quantile(silver_jack, c(0.025, 0.975))
 ci_df <- rbind(ci_df, c("Hawaiian Silverswords", silver_CI[1], silver_CI[2]))
 
 # Naesiotus Snails
-snail_jack <- stand_jack(snail_stand)
+snail_jack <- stand_jack(snail_stand, 0)
 snail_CI <- quantile(snail_jack, c(0.025, 0.975))
 ci_df <- rbind(ci_df, c("Naesiotus Snails", snail_CI[1], snail_CI[2]))
 
 # Anolis lizards
-anole_jack <- stand_jack(anole_stand)
+anole_jack <- stand_jack(anole_stand, 1)
 anole_CI <- quantile(anole_jack, c(0.025, 0.975))
+ci_df <- rbind(ci_df, c("Anolis Lizards", anole_CI[1], anole_CI[2]))
 
 
 # Name ci_df columns
