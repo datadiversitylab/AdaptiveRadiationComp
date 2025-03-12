@@ -222,3 +222,145 @@ ci_df <- rbind(ci_df, c("Anolis Lizards", anole_CI[1], anole_CI[2]))
 colnames(ci_df) <- c("Taxon", "2.5%", "97.5%")
 
 write.csv(ci_df, "Data/Modified_Jackknife_Confidence_Intervals.csv", row.names = FALSE)
+
+##### JACKKNIFE COMPARISON #####
+# Generate the same style of confidence intervals around the slope for the
+## comparison genera
+
+# Create empty df to populate with CIs
+ci_df <- data.frame()
+
+## Madagascar Chameleons
+furci_areas <- read.csv("Data/Furcifer_areas.csv")
+
+# NOTE: best-fit SAR has 1 breakpoint, but it errors during the jackknife
+# Using linear model instead
+
+# Get standardized version of SAR
+# (This will automatically output the regular SAR in Plots)
+furci_stand <- standardize(furci_areas, 0)
+
+# Calculate linear model with standardized data
+furci_linear <- lm(y ~ x, data = furci_stand)
+
+# Plot standardized SAR
+plot(furci_stand,
+     ylab = "Standardized Log Number of Species",
+     xlab = expression(paste("Standardized Log Island Area (", "m"^"2", ")")),
+     main = "Species-Area Relationship",
+     pch = 16)
+abline(furci_linear)
+
+# Now conduct jackknife
+furci_jack <- stand_jack(furci_stand, 0)
+furci_CI <- quantile(furci_jack, c(0.025, 0.975))
+ci_df <- rbind(ci_df, c("Madagascar Chameleons", furci_CI[1], furci_CI[2]))
+
+
+## African Lake Fish
+enter_areas <- read.csv("Data/Enteromius_areas.csv")
+
+# Get standardized version of SAR
+# (This will automatically output the regular SAR in Plots)
+enter_stand <- standardize(enter_areas, 1) # Best-fit SAR has 1 breakpoint
+
+# Run a linear model on the data to use in creating segmented/breakpoint regression
+linear <- lm(y ~ x, data = enter_stand)
+
+seg <- segmented(linear, seg.Z = ~x, npsi = 1, control = seg.control(display = FALSE))
+
+# Plot the breakpoint regression line
+plot(seg, rug = FALSE,
+     xlim = c(0,1),
+     ylim = c(0,1),
+     ylab = "Log Number of Species",
+     xlab = expression(paste("Log Island Area (", "m"^"2", ")")),
+     main = "Species-Area Relationship")
+# Add the points
+points(enter_stand$x, enter_stand$y, pch = 19)
+
+# Now conduct jackknife
+enter_jack <- stand_jack(enter_stand, 1) # 1 breakpoint
+enter_CI <- quantile(enter_jack, c(0.025, 0.975))
+ci_df <- rbind(ci_df, c("African Enteromius", enter_CI[1], enter_CI[2]))
+
+
+## Hawaiian Acacia
+acacia_areas <- read.csv("Data/Acacia_areas.csv")
+
+# Get standardized version of SAR
+# (This will automatically output the regular SAR in Plots)
+acacia_stand <- standardize(acacia_areas, 1) # Best-fit SAR has 1 breakpoint
+
+# Run a linear model on the data to use in creating segmented/breakpoint regression
+linear <- lm(y ~ x, data = acacia_stand)
+
+seg <- segmented(linear, seg.Z = ~x, npsi = 1, control = seg.control(display = FALSE))
+
+# Plot the breakpoint regression line
+plot(seg, rug = FALSE,
+     xlim = c(0,1),
+     ylim = c(0,1),
+     ylab = "Log Number of Species",
+     xlab = expression(paste("Log Island Area (", "m"^"2", ")")),
+     main = "Species-Area Relationship")
+# Add the points
+points(acacia_stand$x, acacia_stand$y, pch = 19)
+
+# Now conduct jackknife
+acacia_jack <- stand_jack(acacia_stand, 1) # 1 breakpoint
+acacia_CI <- quantile(acacia_jack, c(0.025, 0.975))
+ci_df <- rbind(ci_df, c("Hawaiian Acacia", acacia_CI[1], acacia_CI[2]))
+
+
+## Galapagos Opuntia
+cactus_areas <- read.csv("Data/Opuntia_areas.csv")
+
+# Get standardized version of SAR
+# (This will automatically output the regular SAR in Plots)
+cactus_stand <- standardize(cactus_areas, 0)
+
+# Calculate linear model with standardized data
+cactus_linear <- lm(y ~ x, data = cactus_stand)
+
+# Plot standardized SAR
+plot(cactus_stand,
+     ylab = "Standardized Log Number of Species",
+     xlab = expression(paste("Standardized Log Island Area (", "m"^"2", ")")),
+     main = "Species-Area Relationship",
+     pch = 16)
+abline(cactus_linear)
+
+# Now conduct jackknife
+cactus_jack <- stand_jack(cactus_stand, 0)
+cactus_CI <- quantile(cactus_jack, c(0.025, 0.975))
+ci_df <- rbind(ci_df, c("Galapagos Opuntia", cactus_CI[1], cactus_CI[2]))
+
+
+## Caribbean Tropidophis
+trop_areas <- read.csv("Data/Tropidophis_areas.csv")
+
+# Get standardized version of SAR
+# (This will automatically output the regular SAR in Plots)
+trop_stand <- standardize(trop_areas, 0)
+
+# Calculate linear model with standardized data
+trop_linear <- lm(y ~ x, data = trop_stand)
+
+# Plot standardized SAR
+plot(trop_stand,
+     ylab = "Standardized Log Number of Species",
+     xlab = expression(paste("Standardized Log Island Area (", "m"^"2", ")")),
+     main = "Species-Area Relationship",
+     pch = 16)
+abline(trop_linear)
+
+# Now conduct jackknife
+trop_jack <- stand_jack(trop_stand, 0)
+trop_CI <- quantile(trop_jack, c(0.025, 0.975))
+ci_df <- rbind(ci_df, c("Caribbean Tropidophis", trop_CI[1], trop_CI[2]))
+
+# Name ci_df columns
+colnames(ci_df) <- c("Taxon", "2.5%", "97.5%")
+
+write.csv(ci_df, "Data/Comparison_Jackknife_Confidence_Intervals.csv", row.names = FALSE)
