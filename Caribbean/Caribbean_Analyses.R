@@ -19,8 +19,13 @@ source("../speciationMS2.R")
 anole_dat <- read.csv("Data/Anolis_areas.csv")
 
 # Create species-area relationship (SAR)
-SARP(occurrences = anole_dat, npsi = 1)
+anole_SAR <- create_SAR(occurrences = anole_dat, npsi = 1)
 # 1 breakpoint at 22.293
+
+# Confidence interval around breakpoint
+confint(anole_SAR$segObj)
+# Est. CI(95%).low CI(95%).up
+# psi1.x 22.2925     21.5063    23.0788
 
 # Read in tree for speciation-area relationship (SpAR)
 # Tree from: Patton, A.H., Harmon, L.J., del Rosario Castañeda, M., Frank, 
@@ -34,8 +39,13 @@ anole_tree <- read.tree("Data/Patton_Anolis_Trimmed.tree")
 anole_speciation <- speciationMS2(tree = anole_tree, label_type = "epithet", occurrences = anole_dat)
 
 # Plot SpAR
-SpeARP(anole_speciation, npsi = 1)
+anole_SpAR <- create_SpAR(anole_speciation, npsi = 1)
 # 1 breakpoint at 22.263
+
+# Confidence interval around breakpoint
+confint(anole_SpAR$segObj)
+# Est. CI(95%).low CI(95%).up
+# psi1.x 22.2634     21.9872    22.5395
 
 ##### Eleutherodactylus #####
 # key <- getKey("Eleutherodactylus", "genus")
@@ -48,11 +58,16 @@ SpeARP(anole_speciation, npsi = 1)
 frog_dat <- read.csv("Data/Eleutherodactylus_Curated.csv")
 
 # Get areas of islands in frog_dat
-frog_areas <- findAreas(frog_dat)
+frog_areas <- find_areas(frog_dat)
 
 # Plot SAR
-SARP(occurrences = frog_areas, npsi = 1)
+frog_SAR <- create_SAR(occurrences = frog_areas, npsi = 1)
 # 1 breakpoint at 21.114
+
+# Confidence interval around breakpoint
+confint(frog_SAR$segObj)
+# Est. CI(95%).low CI(95%).up
+# psi1.x 21.114     19.7754    22.4525
 
 # Read in tree for SpAR
 # Tree from: Portik, D.M, Streicher, J.W., & Wiens, J.J. (2023). Frog phylogeny:
@@ -81,8 +96,12 @@ frog_areas$Species <- paste(frog_areas$Genus, frog_areas$Species, sep = "_")
 speciation_rates <- speciationMS2(frog_tree, label_type = "epithet", frog_areas)
 
 # Plot SpAR
-SpeARP(speciation_rates, npsi = 1)
+frog_SpAR <- create_SpAR(speciation_rates, npsi = 1)
 # 1 breakpoint at 21.7
+
+confint(frog_SpAR$segObj)
+# Est. CI(95%).low CI(95%).up
+# psi1.x 21.6995     20.9862    22.4129
 
 ##### Tropidophis #####
 # key <- getKey("Tropidophis", "genus")
@@ -95,8 +114,12 @@ SpeARP(speciation_rates, npsi = 1)
 snake_areas <- read.csv("Data/Tropidophis_areas.csv")
 
 # Plot SAR
-SARP(snake_areas, npsi = 1)
+snake_SAR <- create_SAR(snake_areas, npsi = 1)
 # 1 breakpoint at 18.771
+
+confint(snake_SAR$segObj)
+# Est. CI(95%).low CI(95%).up
+# psi1.x 18.7713     16.9377    20.6049
 
 # Read in tree for SpAR
 # Tree from: Zaher, H., Trusz, C., Koch, C., Entiauspe-Neto, O.M., Battilana, J.,
@@ -109,5 +132,9 @@ snake_tree <- read.tree("Data/tropidophis_tree.tree")
 speciation_rates <- speciationMS2(snake_tree, label_type = "epithet", occurrences = snake_areas)
 
 # Create SpAR
-SpeARP(speciation_rates, npsi = 1)
+snake_SpAR <- create_SpAR(speciation_rates, npsi = 1)
 # 1 breakpoint at 25.143
+
+confint(snake_SpAR$segObj)
+# Est. CI(95%).low CI(95%).up
+# psi1.x 25.1433     25.1432    25.1433
