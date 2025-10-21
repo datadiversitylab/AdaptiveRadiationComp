@@ -1,6 +1,6 @@
 ##### Calculate isolation metrics #####
 # Archipelago: Hawaiian Islands
-# Taxon: Tetragnatha spiders
+# Taxon: Silversword alliance
 
 library(raster)
 library(terra)
@@ -98,7 +98,7 @@ for(i in c(1:length(unique_islands))){
 
 colnames(dist_df) <- c("Island", "Nearest_Dist")
 
-write.csv(dist_df, "Hawaiian/isolation_Hawaii_Tetragnatha.csv", row.names = FALSE)
+write.csv(dist_df, "Hawaiian/isolation_Hawaii_Silverswords.csv", row.names = FALSE)
 
 ### Now figure out which island with occurrences is closest to each island without
 ##### ALL ISLANDS HAVE OCCURRENCES #####
