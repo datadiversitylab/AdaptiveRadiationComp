@@ -114,6 +114,14 @@ final_scale[,2:12] <- sapply(final_scale[,2:12], as.numeric)
 # I don't think we want to scale richness though...
 final_scale$richness <- final_df$richness
 
+# Try creating a pca with the data, then use the PC axes as variables instead
+final_pca <- prcomp(final_df[, c("min_elev", "max_elev", "median_elev", "mean_elev", "TRI", "Nearest_Dist", "mean_csi", "sd_csi")],
+                    scale. = TRUE)
+
+final_df$PC1 <- final_pca$x[,1]
+final_df$PC2 <- final_pca$x[,2]
+final_df$PC3 <- final_pca$x[,3]
+
 # Run GLMM?
 # The Silversword SAR has a breakpoint and a negative second slope
 # DOES NOT CONVERGE
@@ -121,3 +129,44 @@ model1 <- glmer(richness ~ TRI + mean_elev + median_elev + min_elev + max_elev +
                 data = final_scale, family = poisson)
 model2 <- glmer(richness ~ TRI + mean_elev + median_elev + min_elev + max_elev + Nearest_Dist + mean_csi + sd_csi + area + (1 | bp), 
                 data = final_df, family = poisson)
+
+model3 <- glmer(richness ~ PC1 + PC2 + PC3 + (1|bp),
+                data = final_df, family = poisson)
+# Find out variable importance in model3
+# For the important PC, look at weights (final_pca$rotation)
+
+##### Attempting Variable Importance #####
+library(lme4)
+library(glmm.hp)
+library(MuMIn)
+
+## Environment object definitions:
+# final_df - a dataframe of all of the unscaled predictors 
+#            (including PC1, PC2, and PC3)
+# final_pca - the PCA result, which incorporates all of the variables except for
+#             richness, area, and bp
+# model3 - the glmer model with formula richness ~ PC1 + PC2 + PC3 + (1|bp)
+
+glmm.hp(model3)
+# ERROR: object's call contains dotted names
+
+# Maybe the function needs to be updatable first?
+uglmer <- updateable(glmer)
+model4 <- uglmer(richness ~ PC1 + PC2 + PC3 + (1|bp), data = final_df, family = poisson)
+glmm.hp(model4)
+# ERROR: object's call contains dotted names
+
+# Maybe we can rank importance based on coefficients?
+fixef(model3)
+coefs <- fixef(model3)[c("PC1", "PC2", "PC3")]
+abs(coefs) / sum(abs(coefs))
+
+# Variable importance in the original space?
+loadings <- final_pca$rotation
+# Fancy matrix multiplication suggestion from Google
+var_importance <- as.matrix(loadings[, 1:3]) %*% coefs
+
+# Or maybe partial R^2 would be better?
+library(performance)
+r2_nakagawa(model3)
+# This doesn't work for the same reason that glmm.hp doesn't work
