@@ -45,13 +45,44 @@ final_df <- merge(final_df, csi, by = "name", all.x = TRUE)
 # Replace NAs with 0
 final_df[is.na(final_df)] <- 0
 
+# Try to scale the columns?
+final_scale <- scale(final_df[,2:11])
+final_scale <- cbind(final_df$name, final_scale)
+final_scale <- as.data.frame(final_scale)
+colnames(final_scale)[1] <- "name"
+# They're all characters for some reason
+final_scale[,2:11] <- sapply(final_scale[,2:11], as.numeric)
+
+# I don't think we want to scale richness though...
+final_scale$richness <- final_df$richness
+
 ## Run models
 
 # The Tetragnatha SAR doesn't have a breakpoint, so actually it should be a glm?
 model1 <- glm(richness ~ TRI + mean_elev + median_elev + min_elev + max_elev + Nearest_Dist + mean_csi + sd_csi,
-              family = poisson, data = final_df)
+              family = poisson, data = final_scale)
 model2 <- glm(richness ~ TRI + mean_elev + median_elev + min_elev + max_elev + Nearest_Dist + mean_csi + sd_csi + area,
-              family = poisson, data = final_df)
+              family = poisson, data = final_scale)
+
+# Check out the correlation of the numeric predictors (but not richness)
+cor_matrix <- cor(final_df[, c("TRI", "mean_elev", "median_elev", "min_elev", 
+                               "max_elev", "Nearest_Dist", 
+                               "mean_csi", "sd_csi", "area")])
+# TRI: median_elev, area
+# mean_elev: median_elev, min elev, max elev, mean_csi, sd_csi, area
+# median_elev: TRI, mean_elev, min_elev, max_elev, mean_csi, sd_csi, area
+# min_elev: mean_elev, median_elev, max_elev
+# max_elev: mean_elev, median_elev, min_elev, mean_csi, sd_csi, area
+# Nearest_Dist: mean_csi
+# mean_csi: mean_elev, median_elev, max_elev, Nearest_Dist, sd_csi, area
+# sd_csi: mean_elev, median_elev, max_elev, Nearest_Dist, mean_csi, area
+# area: TRI, mean_elev, median_elev, max_elev, mean_csi, sd_csi
+
+# REMOVE: mean_elev, median_elev, max_elev, sd_csi?
+model1 <- glm(richness ~ TRI + min_elev + Nearest_Dist + mean_csi,
+              family = poisson, data = final_scale)
+model2 <- glm(richness ~ TRI + min_elev + Nearest_Dist + mean_csi + area,
+              family = poisson, data = final_scale)
 
 ##### Hawaiian Silverswords #####
 
