@@ -3,9 +3,8 @@ library(sf)
 library(dplyr)
 library(here)
 
-#https://zenodo.org/records/4058819
 habitat_lvl1 <- rast(here("habitat_diversity", 
-                          "iucn_habitatclassification_composite_lvl1_ver004.tif"))
+                          "iucn_habitatclassification_composite_lvl1_ver004_sub.tif"))
 
 # HawaiianAsteraceae (from IUCN; geo [hawaii st.] and taxonomic [asteraceae] restriction)
 ranges <- vect(here("habitat_diversity", "HawaiianAsteraceae/data_0.shp"))
@@ -19,6 +18,7 @@ gl <- length(unique(extracted_values[,2]))
 
 # CaribbeanAnoles (from IUCN; geo [caribbean] and taxonomic [anolis] restriction)
 ranges <- vect(here("habitat_diversity", "CaribbeanAnoles/data_0.shp"))
+ranges <- crop(ranges, systems)
 extracted_values <- extract(habitat_lvl1, ranges)
 ca <- length(unique(extracted_values[,2]))
 
@@ -61,12 +61,12 @@ tg <- length(unique(extracted_values[,2]))
 
 # Export dataset
 hd <- rbind(
-"Tetragnatha" = tg,
-"Scalesia" = sc,
-"Caribbean Eleuterodactylus" = ce,
-"Caribbean Anoles" = ca,
-"Galapagos Finches" = gl,
-"Hawaiian Asteraceae" = hw
+  "Tetragnatha" = tg,
+  "Scalesia" = sc,
+  "Caribbean Eleuterodactylus" = ce,
+  "Caribbean Anoles" = ca,
+  "Galapagos Finches" = gl,
+  "Hawaiian Asteraceae" = hw
 )
 
 colnames(hd) <- "n_habitats"
