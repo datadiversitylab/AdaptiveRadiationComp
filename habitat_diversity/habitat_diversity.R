@@ -8,22 +8,22 @@ habitat_lvl1 <- rast(here("habitat_diversity",
                           "iucn_habitatclassification_composite_lvl1_ver004.tif"))
 
 # HawaiianAsteraceae (from IUCN; geo [hawaii st.] and taxonomic [asteraceae] restriction)
-ranges <- vect("HawaiianAsteraceae/data_0.shp")
+ranges <- vect(here("habitat_diversity", "HawaiianAsteraceae/data_0.shp"))
 extracted_values <- extract(habitat_lvl1, ranges)
 hw <- length(unique(extracted_values[,2]))
 
 # GalapagosFinches (from IUCN; geo [galapagos] and taxonomic [thraupidae] restriction)
-ranges <- vect("CaribbeanAnoles/data_0.shp")
+ranges <- vect(here("habitat_diversity", "CaribbeanAnoles/data_0.shp"))
 extracted_values <- extract(habitat_lvl1, ranges)
 gl <- length(unique(extracted_values[,2]))
 
 # CaribbeanAnoles (from IUCN; geo [caribbean] and taxonomic [anolis] restriction)
-ranges <- vect("CaribbeanAnoles/data_0.shp")
+ranges <- vect(here("habitat_diversity", "CaribbeanAnoles/data_0.shp"))
 extracted_values <- extract(habitat_lvl1, ranges)
 ca <- length(unique(extracted_values[,2]))
 
 # CaribbeanEleuterodactylus (from IUCN; geo [caribbean] and taxonomic [eleuterodactylus] restriction)
-ranges <- vect("CaribbeanEleuterodactylus/data_0.shp")
+ranges <- vect(here("habitat_diversity", "CaribbeanEleuterodactylus/data_0.shp"))
 extracted_values <- extract(habitat_lvl1, ranges)
 ce <- length(unique(extracted_values[,2]))
 
