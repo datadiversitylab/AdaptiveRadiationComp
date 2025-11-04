@@ -8,6 +8,9 @@ library(here)
 
 #https://zenodo.org/records/4058819
 
+
+## Level 1
+
 habitat_lvl1 <- rast(here("habitat_diversity", 
                           "iucn_habitatclassification_composite_lvl1_ver004.tif"))
 
@@ -44,4 +47,18 @@ writeRaster(habitat_lvl1,
             here("habitat_diversity",
                  "iucn_habitatclassification_composite_lvl1_ver004_sub.tif"),
             overwrite = FALSE)
+
+
+## Level 2 - raster
+
+habitat_lvl2 <- rast(here("habitat_diversity", 
+                          "iucn_habitatclassification_composite_lvl2_ver004.tif"))
+
+habitat_lvl2 <- crop(habitat_lvl2, systems)
+habitat_lvl2 <- mask(habitat_lvl2, systems)
+writeRaster(habitat_lvl2, 
+            here("habitat_diversity",
+                 "iucn_habitatclassification_composite_lvl2_ver004_sub.tif"),
+            overwrite = FALSE)
+
 

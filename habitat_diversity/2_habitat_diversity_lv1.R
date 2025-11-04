@@ -18,6 +18,7 @@ gl <- length(unique(extracted_values[,2]))
 
 # CaribbeanAnoles (from IUCN; geo [caribbean] and taxonomic [anolis] restriction)
 # Clipped to the caribbean using QGIS (data_0.shp -> systems.shp; memory issues in R)
+# Available at https://nextcloud.datadiversitylab.synology.me/s/sWzMnAWK43w9LDd
 ranges <- vect(here("habitat_diversity", "CaribbeanAnoles/data_1.shp"))
 extracted_values <- extract(habitat_lvl1, ranges)
 ca <- length(unique(extracted_values[,2]))
@@ -70,7 +71,7 @@ hd <- rbind(
 )
 
 colnames(hd) <- "n_habitats"
-write.csv(hd, here("habitat_diversity", "habitat.diversity.csv"))
+write.csv(hd, here("habitat_diversity", "habitat.diversity_lv1.csv"))
 
 
 
