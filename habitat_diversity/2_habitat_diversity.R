@@ -70,7 +70,7 @@ hd <- rbind(
 )
 
 colnames(hd) <- "n_habitats"
-write.csv(here("habitat_diversity", "habitat.diversity.csv"))
+write.csv(hd, here("habitat_diversity", "habitat.diversity.csv"))
 
 
 
