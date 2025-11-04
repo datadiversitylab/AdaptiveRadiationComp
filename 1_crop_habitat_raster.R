@@ -32,6 +32,12 @@ galapagos <- vect(here("Galapagos",
 
 # Objects delimiting the target areas
 systems <- rbind(caribbean, galapagos, hawaii)
+
+writeVector(systems, 
+            here("habitat_diversity",
+                 "systems.shp"),
+            overwrite = FALSE)
+
 habitat_lvl1.1 <- crop(habitat_lvl1, systems)
 habitat_lvl1 <- mask(habitat_lvl1.1, systems)
 writeRaster(habitat_lvl1, 

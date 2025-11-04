@@ -12,12 +12,13 @@ extracted_values <- extract(habitat_lvl1, ranges)
 hw <- length(unique(extracted_values[,2]))
 
 # GalapagosFinches (from IUCN; geo [galapagos] and taxonomic [thraupidae] restriction)
-ranges <- vect(here("habitat_diversity", "CaribbeanAnoles/data_0.shp"))
+ranges <- vect(here("habitat_diversity", "GalapagosFinches/data_0.shp"))
 extracted_values <- extract(habitat_lvl1, ranges)
 gl <- length(unique(extracted_values[,2]))
 
 # CaribbeanAnoles (from IUCN; geo [caribbean] and taxonomic [anolis] restriction)
-ranges <- vect(here("habitat_diversity", "CaribbeanAnoles/data_0.shp"))
+# Clipped to the caribbean using QGIS (data_0.shp -> systems.shp; memory issues in R)
+ranges <- vect(here("habitat_diversity", "CaribbeanAnoles/data_1.shp"))
 extracted_values <- extract(habitat_lvl1, ranges)
 ca <- length(unique(extracted_values[,2]))
 
