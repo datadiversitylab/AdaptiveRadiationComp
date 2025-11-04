@@ -18,7 +18,6 @@ gl <- length(unique(extracted_values[,2]))
 
 # CaribbeanAnoles (from IUCN; geo [caribbean] and taxonomic [anolis] restriction)
 ranges <- vect(here("habitat_diversity", "CaribbeanAnoles/data_0.shp"))
-ranges <- crop(ranges, systems)
 extracted_values <- extract(habitat_lvl1, ranges)
 ca <- length(unique(extracted_values[,2]))
 
