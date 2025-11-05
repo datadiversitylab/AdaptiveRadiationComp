@@ -8,7 +8,19 @@ csi <- terra::rast(here("CSI", "csi_past.tif"))
 
 # Galapagos
 gal <- terra::vect(here("Galapagos", "Shapefile" ,"galapagos_island_Project.shp"))
+# Remove all polygons with NA name
+gal_names <- gal[!is.na(gal$nombre), ]
+
+# Ensure the polygons are gone
+gal_final <- gal_names[!is.empty(gal_names), ]
+
+# Ensure that all names are unique
+gal_final$nombre <- make.unique(gal_final$nombre)
+
+gal_islands <- gal_final
+
 gal_islands <- subset(gal, gal$tipo == "Isla")
+
 csi_gal <- cbind.data.frame(island = gal_islands$nombre, 
                             mean= extract(csi, gal_islands, fun=mean)[,2],
                             sd= extract(csi, gal_islands, fun=sd)[,2])
