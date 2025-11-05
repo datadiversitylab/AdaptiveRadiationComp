@@ -49,6 +49,8 @@ final_df <- merge(final_df, csi, by = "name", all.x = TRUE)
 # Replace NAs with 0
 final_df[is.na(final_df)] <- 0
 
+write.csv(final_df, "galap_finch_final_df.csv", row.names = FALSE)
+
 # Run GLMM?
 # model1 <- glmer(richness ~ TRI + mean_elev + median_elev + min_elev + max_elev + Nearest_Dist + nearest_occ, 
 #                data = final_df, family = poisson)
@@ -114,6 +116,8 @@ for(i in c(1:length(final_df))){
 }
 
 final_df <- cbind(final_df, bp)
+
+write.csv(final_df, "galap_scalesia_final_df.csv", row.names = FALSE)
 
 # Try to scale the columns?
 final_scale <- scale(final_df[,2:12])

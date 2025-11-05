@@ -45,6 +45,8 @@ final_df <- merge(final_df, csi, by = "name", all.x = TRUE)
 # Replace NAs with 0
 final_df[is.na(final_df)] <- 0
 
+write.csv(final_df, "hawaii_tetragnatha_final_df.csv", row.names = FALSE)
+
 # Try to scale the columns?
 final_scale <- scale(final_df[,2:11])
 final_scale <- cbind(final_df$name, final_scale)
@@ -132,6 +134,8 @@ for(i in c(1:6)){
 }
 
 final_df <- cbind(final_df, bp)
+
+write.csv(final_df, "hawaii_silverswords_final_df.csv", row.names = FALSE)
 
 # Try to scale the columns?
 final_scale <- scale(final_df[,2:11])
