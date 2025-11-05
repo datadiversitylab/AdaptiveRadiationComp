@@ -27,14 +27,14 @@ for (var in numeric_predictors) {
 # Random intercept model
 
 model_full <- glmer(
-    bp ~ n_islands + mean_csi + mean_elevation +
-      mean_TRI + mean_nearest_dist + mean_area + 
-      dispersal + n_habitat + diet + (1|archipelago),
-    data = data_scaled,
-    family = binomial(link = "logit"))
-  
-  summary(model_full)
-  
+  bp ~ n_islands + mean_csi + mean_elevation +
+    mean_TRI + mean_nearest_dist + mean_area + 
+    dispersal + n_habitat + diet + (1|archipelago),
+  data = data_scaled,
+  family = binomial(link = "logit"))
+
+summary(model_full)
+
 # Stepwise model selection (archipelago as random effect)
 
 univariate_results <- data.frame(
