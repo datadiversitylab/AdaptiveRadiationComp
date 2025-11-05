@@ -35,6 +35,7 @@ for (file_path in all_files) {
   min_richness_nonzero <- min(richness_nonzero, na.rm = TRUE)
   max_richness <- max(richness_nonzero, na.rm = TRUE)
   mean_richness_nonzero <- mean(richness_nonzero, na.rm = TRUE)
+  bp <- ifelse("bp" %in% colnames(data), 1, 0)
   
   # Summarize results
   result_row <- data.frame(
@@ -55,6 +56,7 @@ for (file_path in all_files) {
     min_richness_nonzero = min_richness_nonzero,
     max_richness = max_richness,
     mean_richness_nonzero = mean_richness_nonzero,
+    bp = bp,
     stringsAsFactors = FALSE
   )
   
