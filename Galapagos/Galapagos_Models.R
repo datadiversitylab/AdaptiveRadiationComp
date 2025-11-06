@@ -109,7 +109,7 @@ final_df[is.na(final_df)] <- 0
 # Add whether the island is before/after the breakpoint
 # The breakpoint here is 20.709, so any log(area) above that is after the BP
 bp <- rep(0, 12)
-for(i in c(1:length(final_df))){
+for(i in c(1:length(final_df$name))){
   if(log(final_df[i,10]) > 20.709){
     bp[i] <- 1
   }
