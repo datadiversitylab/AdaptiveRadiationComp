@@ -155,6 +155,40 @@ barplot(import_vals, names.arg = names(var_import),
         xlab = "Predictors", ylab = "Variable Importance")
 
 
+##### Compare the above results to models with deltaAIC < 4 #####
+
+# Find which models have a deltaAIC < 4
+close_models <- which(selection$delta < 4)
+close_models <- selection[close_models,]
+
+# The indices of these models are the rownames
+AIC4_models <- rownames(close_models)
+AIC4_models <- as.numeric(AIC4_models)
+
+# Now subset all_models list
+deltaAIC4 <- model_list[AIC4_models]
+
+# Calculate model-averaged coefficients
+avg_coeff_4 <- model.avg(deltaAIC4)
+summary(avg_coeff_4)
+
+coef(avg_coeff_4)
+
+# Calculate coefficient confidence intervals
+conf_int <- confint(avg_coeff_4)
+
+# Calculate variable importance (sum of model weights)
+var_import <- sw(deltaAIC4)
+#                     n_habitat Nearest_Dist mean_csi TRI  dispersal sd_csi max_elev area
+# Sum of weights:      1.00      1.00         0.94    0.85  0.72      0.34   0.23     0.15
+
+# Barplot
+import_vals <- c(1, 1, 0.94, 0.85, 0.72, 0.34, 0.23, 0.15)
+barplot(import_vals, names.arg = names(var_import),
+        xlab = "Predictors", ylab = "Variable Importance", main = "delta AIC < 4 subset")
+
+
+
 ##### OLD CODE but might be useful later #####
 
 options(na.action = "na.fail") # Required for dredge to run
