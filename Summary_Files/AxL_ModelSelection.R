@@ -80,7 +80,9 @@ cor_matrix_new <- cor(dat_scale[, c("n_islands", "mean_csi", "mean_nearest_dist"
 # Start with one variable, then systematically add the rest to the model
 var_vec <- c("n_islands", "mean_csi", "mean_nearest_dist", 
              "mean_elevation", "mean_TRI", "max_richness",
-             "n_habitat")
+             "n_habitat", "dispersal")
+
+var_vec <- c("mean_csi", "max_richness", "n_habitat")
 
 # For counting loop iterations
 i <- 0
@@ -104,15 +106,54 @@ for(v in c(1:length(var_vec))){
     # Next, write the whole formula
     formula <- paste("bp ~", current_vars, "+ (1|archipelago)")
     
-    # Use the formula in a GLMM
-    model <- glmer(formula = formula, data = dat_scale, family = binomial)
-    
-    # Add model object to the list
-    i <- i + 1
-    model_list[[i]] <- model
-    
+    # Try to use the formula in a GLMM
+    model <- tryCatch(
+      glmer(formula = formula, data = dat_scale, family = binomial),
+      error = function(e) {
+        return(NULL)
+      }
+    )
+    # Add model object to the list (as long as it isn't NULL)
+    if(!is.null(model)){
+      i <- i + 1
+      model_list[[i]] <- model
+    }
   }
 }
 
 # Now use model.sel to select the best-supported model based on AICc
 selection <- model.sel(model_list)
+
+# FORTY-NINE models have a deltaAIC of ZERO
+
+# Find which models have a deltaAIC < 1
+close_models <- which(selection$delta < 1)
+close_models <- selection[close_models,]
+
+# The indices of these models are the rownames
+AIC1_models <- rownames(close_models)
+AIC1_models <- as.numeric(AIC1_models)
+
+# Now subset all_models list
+deltaAIC1 <- model_list[AIC1_models]
+
+# Calculate model-averaged coefficients
+avg_coeff_1 <- model.avg(deltaAIC1)
+summary(avg_coeff_1)
+
+coef(avg_coeff_1)
+
+# Calculate coefficient confidence intervals
+conf_int <- confint(avg_coeff_1)
+# All NaNs
+
+# Calculate variable importance (sum of model weights)
+var_import <- sw(deltaAIC1)
+#                   max_richness n_habitat mean_csi mean_TRI dispersal mean_elevation mean_nearest_dist n_islands
+# Sum of weights:      0.49         0.49      0.45     0.45     0.43      0.43           0.43              0.41     
+# N containing models:   24           24        22       22       21        21             21                20    
+
+# Barplot
+import_vals <- c(0.49, 0.49, 0.45, 0.45, 0.43, 0.43, 0.43, 0.41)
+barplot(import_vals, names.arg = names(var_import),
+        xlab = "Predictors", ylab = "Variable Importance", main = "delta AIC < 1 subset")
