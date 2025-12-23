@@ -100,38 +100,30 @@ write.csv(habitat_df, "Caribbean/Data/n_habitat_caribbean_islands.csv", row.name
 ##### Check for correlation between n_habitat and all other island-specific vars
 island_traits <- read.csv("Summary_Files/island_traits.csv")
 
+# THIS ISN'T WORKING BECAUSE OF NAME PROBLEMS
 # Read full IxL dataframe to filter by islands actually used in the analysis
-dat <- read.csv("Summary_Files/IxL.csv")
+#dat <- read.csv("Summary_Files/IxL.csv")
+#islands <- unique(dat$name)
+#filtered_islands <- island_traits[island_traits$name %in% islands, ]
 
-islands <- unique(dat$name)
-
-filtered_islands <- island_traits[island_traits$name %in% islands, ]
+filtered_islands <- island_traits
 
 # Scale columns
-filtered_scale <- scale(filtered_islands[,2:9])
+filtered_scale <- scale(filtered_islands[,2:10])
 filtered_scale <- cbind(filtered_islands$name, filtered_scale)
 filtered_scale <- as.data.frame(filtered_scale)
 colnames(filtered_scale)[1] <- "name"
 # They're all characters for some reason
-filtered_scale[,2:9] <- sapply(filtered_scale[,2:9], as.numeric)
-
-# # Get island areas
-# dat <- read.csv("Summary_Files/IxL.csv")
-# area_dat <- as.data.frame(cbind(dat$name, dat$area))
-# colnames(area_dat) <- c("name", "area")
-# area_dat$area <- as.numeric(area_dat$area)
-# 
-# # Merge dataframes
-# with_area <- merge(area_dat, island_traits, by = "name", all = TRUE)
-# 
-# # Remove duplicate rows
-# with_area <- unique(with_area)
+filtered_scale[,2:10] <- sapply(filtered_scale[,2:10], as.numeric)
 
 library(corrplot)
 
+# When area was added, there is one NA that is messing up the TRI correlations
+# Adding "use = "pairwise.complete.obs"" ensures that the NA doesn't impact
+#  the correlation matrix
 cor_matrix <- cor(filtered_scale[, c("TRI", "mean_elev", "median_elev", 
                                       "min_elev", "max_elev", 
-                                      "mean_csi", "sd_csi",
-                                      "n_habitat")])
+                                      "n_habitat", "area")],
+                  use = "pairwise.complete.obs")
 corrplot(cor_matrix, method = "number", order = "alphabet", 
          type = "lower", col = COL2("RdBu"))
