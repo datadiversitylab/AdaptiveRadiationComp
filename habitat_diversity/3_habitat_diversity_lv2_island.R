@@ -51,31 +51,37 @@ colnames(habitat_df) <- c("Name", "n_habitat")
 write.csv(habitat_df, "Hawaiian/Data/n_habitat_silverswords.csv", row.names = FALSE)
 
 # Tetragnatha (buffer around gbif occurrences)
-library(rgbif)
-tetragnatha_key <- name_backbone("Tetragnatha")$usageKey
-tetragnatha_data <- occ_search(
-  taxonKey = tetragnatha_key,
-  country = "US",
-  stateProvince = "Hawaii",
-  hasCoordinate = TRUE
-)
-occur_data <- tetragnatha_data$data
-occur_clean <- occur_data %>%
-  filter(!is.na(decimalLongitude) & !is.na(decimalLatitude)) %>%
-  filter(coordinateUncertaintyInMeters < 100 | is.na(coordinateUncertaintyInMeters)) # Optional: filter by uncertainty
 
-# To cite GBIF properly, make sure to get info for a Derived Dataset
-library(ssarp)
-sources <- get_sources(occur_clean)
+# library(rgbif)
+# tetragnatha_key <- name_backbone("Tetragnatha")$usageKey
+# tetragnatha_data <- occ_search(
+#   taxonKey = tetragnatha_key,
+#   country = "US",
+#   stateProvince = "Hawaii",
+#   hasCoordinate = TRUE
+# )
+# occur_data <- tetragnatha_data$data
+# occur_clean <- occur_data %>%
+#   filter(!is.na(decimalLongitude) & !is.na(decimalLatitude)) %>%
+#   filter(coordinateUncertaintyInMeters < 100 | is.na(coordinateUncertaintyInMeters)) # Optional: filter by uncertainty
+# 
+# # To cite GBIF properly, make sure to get info for a Derived Dataset
+# library(ssarp)
+# sources <- get_sources(occur_clean)
+# 
+# occur_points <- vect(occur_clean, 
+#                      geom = c("decimalLongitude", "decimalLatitude"),
+#                      crs = "EPSG:4326")
+bloop <- read.csv("Hawaiian/Data/tetragnatha_filtered_occs.csv")
 
-occur_points <- vect(occur_clean, 
+occur_points <- vect(bloop,
                      geom = c("decimalLongitude", "decimalLatitude"),
                      crs = "EPSG:4326")
 
 occur_buffers <- buffer(occur_points, width = 10) #10 meters buffer
 
 # Do the same thing as for Silverswords to get number of habitats
-combo_range <- intersect(occur_buffers, hawaii_vec)
+combo_range <- terra::intersect(occur_buffers, hawaii_vec)
 
 # Loop through each island/range combo polygon and grab the
 #  number of habitats using extract
@@ -100,7 +106,7 @@ for(i in c(1:length(islands))){
 }
 
 colnames(habitat_df) <- c("Name", "n_habitat")
-write.csv(habitat_df, "Hawaiian/Data/n_habitat_tetragnatha.csv", row.names = FALSE)
+write.csv(habitat_df, "Hawaiian/Data/NEW_n_habitat_tetragnatha.csv", row.names = FALSE)
 
 ##### Galapagos #####
 
@@ -112,7 +118,7 @@ ranges <- vect(here("habitat_diversity", "GalapagosFinches/data_0.shp"))
 range_crop <- crop(ranges, galap_final)
 # Change galap_final to SpatVector
 galap_vec <- vect(galap_final)
-combo_range <- intersect(range_crop, galap_vec)
+combo_range <- terra::intersect(range_crop, galap_vec)
 
 # Loop through each island/range combo polygon and grab the
 #  number of habitats using extract
@@ -178,6 +184,47 @@ for(i in c(1:length(islands))){
 
 colnames(habitat_df) <- c("Name", "n_habitat")
 write.csv(habitat_df, "Galapagos/Data/n_habitat_scalesia.csv", row.names = FALSE)
+
+
+## Scalesia NEW with GBIF ##
+# Change galap_final to SpatVector
+galap_vec <- vect(galap_final)
+
+bloop <- read.csv("Galapagos/Data/scalesia_occs_NEW.csv")
+
+occur_points <- vect(bloop,
+                     geom = c("decimalLongitude", "decimalLatitude"),
+                     crs = "EPSG:4326")
+
+occur_buffers <- buffer(occur_points, width = 10) #10 meters buffer
+
+# Do the same thing as for Silverswords to get number of habitats
+combo_range <- terra::intersect(occur_buffers, galap_vec)
+
+# Loop through each island/range combo polygon and grab the
+#  number of habitats using extract
+
+# Get island names
+islands <- unique(combo_range$nombre)
+# Create empty list for results
+results <- list()
+
+for(i in islands){
+  # Grab island/range combo polygon for single island
+  single_island <- combo_range[combo_range$nombre == i, ]
+  
+  # Add extracted values to the results
+  results[[i]] <- extract(habitat_lvl2, single_island)
+}
+
+# Now, for each island, get the number of habitats
+habitat_df <- as.data.frame(matrix(nrow = length(islands), ncol = 2))
+for(i in c(1:length(islands))){
+  habitat_df[i,] <- c(islands[i], length(unique(results[[i]][,2])))
+}
+
+colnames(habitat_df) <- c("Name", "n_habitat")
+write.csv(habitat_df, "Galapagos/Data/NEW_n_habitat_scalesia.csv", row.names = FALSE)
 
 ##### Caribbean #####
 
