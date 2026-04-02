@@ -130,3 +130,158 @@ for(i in c(1:length(no_occ))){
 
 colnames(no_occ_dists) <- c("Island", "Distance_m")
 write.csv(no_occ_dists, "Galapagos/no_occ_dists_Galap_Finch.csv", row.names = FALSE)
+
+##### Find shortest distance between only islands that have occurrences #####
+dat <- read.csv("Summary_Files/IxL_distmainland.csv")
+dat <- dat[which(dat$richness > 0),]
+galap_dat <- dat[which(dat$archipelago == "galap"),]
+finch_dat <- galap_dat[which(galap_dat$lineage == "finches"),]
+rownames(finch_dat) <- c(1:length(finch_dat$name))
+
+# Fix accents in finch_dat
+all_names <- as.data.frame(all_names)
+finch_dat[3,1] <- all_names[114,1]
+finch_dat[10,1] <- all_names[60,1]
+finch_dat[14,1] <- all_names[2,1]
+
+# Include only islands in finch_dat
+# Filter the polygons
+polygons <- terra::subset(galap_final, galap_final$nombre %in% finch_dat$name)
+# Ensure the unwanted polygons are gone
+polygons <- polygons[!is.empty(polygons), ]
+
+# Terra has a centroids function
+cent <- centroids(polygons)
+# Get distance between all centroids
+dist_cent <- terra::distance(cent)
+
+## Transform distance matrix into something more interpetable
+library(reshape2)
+dist_cent_df <- melt(as.matrix(dist_cent), varnames = c("row", "col"))
+
+# Each row and column corresponds to the island in that position
+for(i in c(1:nrow(dist_cent_df))){
+  # Record island numbers
+  island1 <- as.numeric(dist_cent_df[i,1])
+  island2 <- as.numeric(dist_cent_df[i,2])
+  
+  # Replace numbers with names
+  dist_cent_df[i,1] <- polygons$nombre[island1]
+  dist_cent_df[i,2] <- polygons$nombre[island2]
+}
+
+colnames(dist_cent_df) <- c("Island1", "Island2", "Distance_m")
+
+## Now, find the minimum distance for each island
+galapagos_dist <- dist_cent_df
+
+# First, remove all rows with a 0 in the Distance column (the pair is with itself)
+galapagos_dist <- galapagos_dist[-which(galapagos_dist$Distance_m == 0),]
+
+# Next, find the minimum distance for each island
+unique_islands <- unique(galapagos_dist$Island1)
+
+# Create blank dataframe to store data
+# Island name, min dist
+dist_df <- data.frame()
+
+# For each island in unqiue_islands, find the minimum distance
+for(i in c(1:length(unique_islands))){
+  rows <- which(galapagos_dist$Island1 == unique_islands[i])
+  island_comps <- galapagos_dist[rows,]
+  # Find closest island to the current
+  min_dist <- min(island_comps$Distance_m)
+  # Add to dataframe
+  # Name first
+  dist_df[i, 1] <- unique_islands[i]
+  # Then dist
+  dist_df[i, 2] <- min_dist
+}
+
+colnames(dist_df) <- c("Island", "Nearest_Dist")
+
+# Write new distance data
+write.csv(dist_df, "Galapagos/Data/distance_only_occs_islands_galap_finches.csv", row.names = FALSE)
+
+##### Find distance from an island with an occurrence to another island with an occurrence #####
+# Read in galap_final from Galapagos_Elevation.R
+galap_final <- readRDS("Galapagos/Data/galap_final.rds")
+# Convert to terra vector
+galap_final <- vect(galap_final)
+
+# Read in IxL dataset (the basis for everything)
+ixl <- read.csv("ixl_WIP.csv")
+
+# Filter to finches
+dat <- ixl[which(ixl$lineage == "finches"),]
+# Include only islands that have an occurrence on them
+dat <- dat[which(dat$richness > 0),]
+
+# Fix the names
+source("FixNames.R")
+dat <- fixnames_galap(dat)
+ixl <- fixnames_galap(ixl)
+
+# Now we can filter the polygons we're not using
+polygons <- terra::subset(galap_final, galap_final$nombre %in% dat$name)
+# Ensure the unwanted polygons are gone
+polygons <- polygons[!is.empty(polygons), ]
+
+# Terra has a centroids function
+cent <- centroids(polygons)
+# Get distance between all centroids
+dist_cent <- terra::distance(cent)
+
+# Transform distance matrix into something more interpetable
+library(reshape2)
+dist_cent_df <- melt(as.matrix(dist_cent), varnames = c("row", "col"))
+dist_cent_df[,1] <- polygons$nombre[as.numeric(dist_cent_df[,1])]
+dist_cent_df[,2] <- polygons$nombre[as.numeric(dist_cent_df[,2])]
+
+colnames(dist_cent_df) <- c("Island1", "Island2", "Distance_m")
+
+## Now, find the minimum distance for each island
+galap_dist <- dist_cent_df
+
+# First, remove all rows with a 0 in the Distance column (the pair is with itself)
+galap_dist <- galap_dist[-which(galap_dist$Distance_m == 0),]
+
+# Next, find the minimum distance for each island
+unique_islands <- unique(galap_dist$Island1)
+
+# Create blank dataframe to store data
+# Island name, min dist
+dist_df <- data.frame()
+
+# For each island in unqiue_islands, find the minimum distance
+for(i in c(1:length(unique_islands))){
+  rows <- which(galap_dist$Island1 == unique_islands[i])
+  island_comps <- galap_dist[rows,]
+  # Find closest island to the current
+  min_dist <- min(island_comps$Distance_m)
+  # Add to dataframe
+  # Name first
+  dist_df[i, 1] <- unique_islands[i]
+  # Then dist
+  dist_df[i, 2] <- min_dist
+}
+
+colnames(dist_df) <- c("Island", "Nearest_Dist")
+
+# Add column to IxL for distance between occ islands
+# (Already added in Anolis script)
+# ixl$dist_occ_islands <- rep(NA, length(ixl$name))
+
+for(i in c(1:nrow(dist_df))){
+  match_rows <- which(ixl$name == dist_df[i,1])
+  if(length(match_rows) != 0){
+    # For each row in match_rows,
+    for(row in match_rows){
+      # check if it's a finch row
+      if(ixl$lineage[row] == "finches"){
+        # Then add the distance between occ islands
+        ixl$dist_occ_islands[row] <- dist_df[i,2]
+      }
+    }
+  }
+}
