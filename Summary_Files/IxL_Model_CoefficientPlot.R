@@ -18,12 +18,14 @@ for(i in c(1:length(combined_coef$names))){
 
 # Use position_dodge() within geom_pointrange() to stack
 ggplot(combined_coef, 
-       aes(x = estimate, y = names, color = model)) +
+       aes(x = estimate, y = names, color = model, group = model)) +
   geom_vline(xintercept = 0, color = "black") +
   geom_pointrange(aes(xmin = lower, xmax = upper),
                   position = position_dodge(width = 0.5)) +
   # Add asterisks for significance
-  geom_text(aes(label = significant, size = 4, color = "black"),
+  geom_text(aes(label = significant),
+            size = 4, 
+            color = "black",
             position = position_dodge(width = 0.5),
             hjust = -0.8,
             show.legend = FALSE) +
@@ -37,7 +39,8 @@ ggplot(combined_coef,
                               "Standard Dev. CSI",
                               "TRI")) +
   scale_color_manual(values = c("Richness" = "#E69F00",
-                                "Presence" = "#56B4E9")) +
+                                "Presence" = "#56B4E9"),
+                     breaks = c("Richness", "Presence")) +
   labs(x = "Coefficient Estimate with 95% Confidence Interval", y = NULL, color = "Response Variable") +
   theme_minimal() +
   # Remove the grid
