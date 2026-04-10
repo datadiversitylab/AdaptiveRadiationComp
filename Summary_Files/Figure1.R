@@ -37,14 +37,14 @@ for(i in c(1:length(hawaii$isle))){
 }
 
 # Finally, plot the islands with the appropriate colors
+# "Both" = "#CC79A7"
 hawaii_plot <- ggplot(hawaii) +
   geom_sf(aes(fill = presence), show.legend = TRUE) +
   scale_fill_manual(
     values = c(
       "Tetragnatha" = "#0072B2",
       "Silverswords" = "#D55E00",
-      "Both" = "#CC79A7",
-      "NA" = "grey60"),
+      "Both" = "gray75"),
     labels = c(
       expression(italic("Tetragnatha")),
       "Silverswords",
@@ -96,8 +96,7 @@ galap_plot <- ggplot(galap) +
   scale_fill_manual(values = c(
     "Finches" = "#009E73",
     "Scalesia" = "#F0E442",
-    "Both" = "#CC79A7",
-    "NA" = "grey60"),
+    "Both" = "gray75"),
   labels = c(
     "Finches",
     expression(italic("Scalesia")),
@@ -151,8 +150,7 @@ carib_plot <- ggplot(carib) +
   scale_fill_manual(values = c(
     "Anolis" = "#E69F00",
     "Eleutherodactylus" = "#56B4E9",
-    "Both" = "#CC79A7",
-    "NA" = "grey60"),
+    "Both" = "gray75"),
   labels = c(
     expression(italic("Anolis")),
     expression(italic("Eleutherodactylus")),
@@ -303,7 +301,16 @@ galap_leg <- get_legend(galap_plot + theme(legend.title = element_blank(),
 hawaii_leg <- get_legend(hawaii_plot + theme(legend.title = element_blank(),
                                              legend.text = element_text(size = 8)))
 
-pdf("testing_fig1_legs.pdf")
+# Add the okina for Hawaii (\u02BB)
+library(showtext)
+# Maybe I should use a different font...
+font_add_google("Noto Sans", "noto")
+showtext_auto()
+
+# Set the font theme outside of the grid so it applies to everything
+theme_set(theme_minimal(base_family = "noto"))
+
+cairo_pdf("testing_fig1_legs.pdf")
 plot_grid(
   # Maps
   plot_grid(carib_plot + theme(legend.position = "none"),
@@ -313,7 +320,7 @@ plot_grid(
             ncol = 1,
             # Add labels to the left of maps (x = 0)
             # And at the top of each row (y = 1)
-            labels = c("a)", "b)", "c)"),
+            labels = c("a) Caribbean", "b) Galápagos", "c) Hawai\u02BBi"),
             label_x = 0,
             label_y = 1),         
   # Legends

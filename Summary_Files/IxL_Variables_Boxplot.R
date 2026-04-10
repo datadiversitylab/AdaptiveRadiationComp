@@ -16,7 +16,7 @@ for(i in c(1:length(dat$name))){
 }
 
 # Filter to just island-specific variables, and only ones that aren't correlated
-dat_island <- dat %>% select(name, TRI, max_elev, mean_csi, sd_csi, area,
+dat_island <- dat %>% dplyr::select(name, TRI, max_elev, mean_csi, sd_csi, area,
                              dist_mainland, archipelago)
 # Make sure each row is unique
 dat_island <- distinct(dat_island)
@@ -25,6 +25,11 @@ dat_island <- distinct(dat_island)
 
 # Got idea for melting from: https://stackoverflow.com/a/11346964
 m1 <- melt(dat_island)
+
+# Rearrange factor levels to be alphabetical?
+m1$variable <- factor(m1$variable, levels = c("dist_mainland", "area",
+                                              "max_elev", "mean_csi",
+                                              "sd_csi", "TRI"))
 
 ggplot(m1, aes(x = archipelago, y = value)) +
   geom_boxplot(aes(fill = archipelago)) +
@@ -48,17 +53,20 @@ ggplot(m1, aes(x = archipelago, y = value)) +
   facet_wrap(~ variable, 
              axes = "all_x",
              scales = "free_y",
+             nrow = 1,
              labeller = as_labeller(c(
-               TRI = "TRI",
+               dist_mainland = "Distance to Mainland",
+               area = "Island Area",
                max_elev = "Maximum Elevation",
                mean_csi = "Mean CSI",
                sd_csi = "Standard Dev. CSI",
-               area = "Island Area",
-               dist_mainland = "Distance to Mainland"))) +
+               TRI = "TRI"
+               ))) +
   # Change per-plot x-axis labels
-  scale_x_discrete(labels = c("Caribbean", "Galapagos", "Hawaii")) +
+  scale_x_discrete(labels = c("C", "G", "H")) +
   theme_minimal() +
   # Remove gridlines, add rectangle back to facet labels (strip)
-  theme(panel.grid = element_blank(),
-        strip.background = element_rect(fill = "grey95", color = "grey95"),
-        strip.text = element_text(color = "black", face = "bold"))
+  theme(panel.grid = element_blank())
+  # theme(panel.grid = element_blank(),
+  #       strip.background = element_rect(fill = "grey95", color = "grey95"),
+  #       strip.text = element_text(color = "black", face = "bold"))
