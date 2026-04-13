@@ -1,4 +1,4 @@
-# Generating SARs and SpARs for the taxa of interest
+# Generating SARs for the taxa of interest
 # NOTE: Assumes that the working directory is the root of the GitHub repo
 
 # Load libraries
