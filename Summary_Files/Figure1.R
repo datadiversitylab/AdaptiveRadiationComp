@@ -44,7 +44,7 @@ hawaii_plot <- ggplot(hawaii) +
     values = c(
       "Tetragnatha" = "#0072B2",
       "Silverswords" = "#D55E00",
-      "Both" = "gray75"),
+      "Both" = "#A7005C"),
     labels = c(
       expression(italic("Tetragnatha")),
       "Silverswords",
@@ -96,7 +96,7 @@ galap_plot <- ggplot(galap) +
   scale_fill_manual(values = c(
     "Finches" = "#009E73",
     "Scalesia" = "#F0E442",
-    "Both" = "gray75"),
+    "Both" = "#A7005C"),
   labels = c(
     "Finches",
     expression(italic("Scalesia")),
@@ -150,7 +150,7 @@ carib_plot <- ggplot(carib) +
   scale_fill_manual(values = c(
     "Anolis" = "#E69F00",
     "Eleutherodactylus" = "#56B4E9",
-    "Both" = "gray75"),
+    "Both" = "#A7005C"),
   labels = c(
     expression(italic("Anolis")),
     expression(italic("Eleutherodactylus")),

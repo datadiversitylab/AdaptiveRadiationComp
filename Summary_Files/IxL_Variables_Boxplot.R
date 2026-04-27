@@ -65,8 +65,11 @@ ggplot(m1, aes(x = archipelago, y = value)) +
   # Change per-plot x-axis labels
   scale_x_discrete(labels = c("C", "G", "H")) +
   theme_minimal() +
-  # Remove gridlines, add rectangle back to facet labels (strip)
-  theme(panel.grid = element_blank())
+  # Remove gridlines, add axes in gray
+  theme(panel.grid = element_blank(),
+        axis.line = element_line(colour = "gray70", linewidth = 0.5))
+        # Angle tick text
+        #axis.text.x = element_text(angle = 90, hjust = 1))
   # theme(panel.grid = element_blank(),
   #       strip.background = element_rect(fill = "grey95", color = "grey95"),
   #       strip.text = element_text(color = "black", face = "bold"))
