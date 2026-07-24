@@ -8,15 +8,8 @@ rich_coef_data$model <- "Richness"
 pres_coef_data$model <- "Presence"
 combined_coef <- rbind(rich_coef_data, pres_coef_data)
 
-# Create a column that adds an asterisk to significant pointranges
-# combined_coef$significant <- rep("*", length(combined_coef$names))
-# for(i in c(1:length(combined_coef$names))){
-#   if(combined_coef$lower[i] < 0 && combined_coef$upper[i] > 0){
-#     combined_coef$significant[i] <- ""
-#   }
-# }
-
-# Instead of an asterisk, just use TRUE/FALSE
+# Note whether each value is significant (TRUE) or not (FALSE) based on
+#   whether the confidence interval includes zero
 combined_coef$significant <- rep(TRUE, length(combined_coef$names))
 for(i in c(1:length(combined_coef$names))){
   if(combined_coef$lower[i] < 0 && combined_coef$upper[i] > 0){
@@ -31,91 +24,7 @@ combined_coef$names <- factor(combined_coef$names,
                                          "max_elev", "mean_csi", "n_habitat",
                                          "sd_csi", "TRI"))
 
-# Use position_dodge() within geom_pointrange() to stack
-ggplot(combined_coef, 
-       aes(x = estimate, y = names, color = model, group = model)) +
-  geom_vline(xintercept = 0, color = "black") +
-  # Specify that the fill is based on significance
-  geom_pointrange(aes(xmin = lower, xmax = upper, 
-                      fill = interaction(model, significant)),
-                  shape = 21,
-                  position = position_dodge(width = 0.5)) +
-  # When significant = TRUE, fill points with correct color
-  # When significant = FALSE, do not fill points
-  # "guide = "none"" removes the legend for fills specifically
-  scale_fill_manual(values = c("Richness.TRUE" = "#E69F00",
-                               "Presence.TRUE" = "#56B4E9",
-                               "Richness.FALSE" = NA,
-                               "Presence.FALSE" = NA),
-                    guide = "none") +
-  # Specify names on y-axis
-  # They're reversed for some reason, so reverse back??
-  scale_y_discrete(limits = rev,
-                    labels = c(area = "Area",
-                               dist_occ_islands = "Dist. to Island with Occurence",
-                               dist_mainland = "Dist. to Mainland",
-                               Nearest_Dist = "Dist. to Nearest Island",
-                               max_elev = "Maximum Elevation",
-                               mean_csi = "Mean CSI",
-                               n_habitat = "Number of Habitats",
-                               sd_csi = "Standard Dev. CSI",
-                               TRI = "TRI")) +
-  # Overall color of pointranges
-  scale_color_manual(values = c("Richness" = "#E69F00",
-                                "Presence" = "#56B4E9"),
-                     breaks = c("Richness", "Presence")) +
-  #labs(x = "Coefficient Estimate with 95% Confidence Interval", y = NULL, color = "Response Variable") +
-  labs(x = NULL, y = NULL, color = "Response Variable") +
-  theme_minimal() +
-  # Remove the grid
-  theme(panel.grid = element_blank(),
-        text = element_text(size = 14),
-        legend.position = c(0.8, 0.5))
-
-##### Can I change it to be a vertical facet wrap? #####
-# Vertical by response variable
-ggplot(combined_coef, 
-       aes(x = estimate, y = names, color = model)) +
-  geom_vline(xintercept = 0, color = "black") +
-  # Specify that the fill is based on significance
-  geom_pointrange(aes(xmin = lower, xmax = upper, 
-                      fill = interaction(model, significant)),
-                  shape = 21) +
-  # When significant = TRUE, fill points with correct color
-  # When significant = FALSE, do not fill points
-  # "guide = "none"" removes the legend for fills specifically
-  scale_fill_manual(values = c("Richness.TRUE" = "#E69F00",
-                               "Presence.TRUE" = "#56B4E9",
-                               "Richness.FALSE" = NA,
-                               "Presence.FALSE" = NA),
-                    guide = "none") +
-  # Specify names on y-axis
-  # They're reversed for some reason, so reverse back??
-  scale_y_discrete(limits = rev,
-                   labels = c(area = "Area",
-                              dist_occ_islands = "Dist. to Island with Occurence",
-                              dist_mainland = "Dist. to Mainland",
-                              Nearest_Dist = "Dist. to Nearest Island",
-                              max_elev = "Maximum Elevation",
-                              mean_csi = "Mean CSI",
-                              n_habitat = "Number of Habitats",
-                              sd_csi = "Standard Dev. CSI",
-                              TRI = "TRI")) +
-  # Overall color of pointranges
-  scale_color_manual(values = c("Richness" = "#E69F00",
-                                "Presence" = "#56B4E9"),
-                     breaks = c("Richness", "Presence")) +
-  # Add the facet wrap
-  facet_wrap(~ model, ncol = 1, strip.position = "top") +
-  theme_minimal() +
-  labs(x = "Coefficient Estimate with 95% CI", y = "") +
-  # Remove the grid and legend
-  theme(panel.grid = element_blank(),
-        legend.position = "none",
-        text = element_text(size = 14))
-
-# Vertical by predictor
-# Set labels for the facets
+#### Create Pointrange Plot with Vertical Facet Wrap ####
 labels <- c("area" = "Area",
             "dist_occ_islands" = "Dist. to Island with Occurence",
             "dist_mainland" = "Dist. to Mainland",
@@ -126,7 +35,7 @@ labels <- c("area" = "Area",
             "sd_csi" = "Standard Dev. CSI",
             "TRI" = "TRI")
 
-ggplot(combined_coef, 
+base_plot <- ggplot(combined_coef, 
        aes(x = estimate, y = model, color = model)) +
   geom_vline(xintercept = 0, color = "black") +
   # Specify that the fill is based on significance
@@ -150,17 +59,23 @@ ggplot(combined_coef,
   scale_color_manual(values = c("Richness" = "#E69F00",
                                 "Presence" = "#56B4E9"),
                      breaks = c("Richness", "Presence")) +
-  labs(x = "Coefficient Estimate with 95% CI", y = NULL, color = "Response") +
+  labs(x = "Coefficient Estimate", y = NULL, color = "Response") +
   theme_minimal() +
   # Remove the grid  
   theme(panel.grid = element_blank(),
         # Increase text size
         text = element_text(size = 14),
-        # Place the legend
-        legend.position = c(0.85, 0.5),
-        # Make legend title text smaller
-        legend.title = element_text(size = 12),
-        # Add a box around the legend
-        legend.box.background = element_rect(colour = "black"),
+        # Remove the legend
+        legend.position = "none",
+        # Add a box around each facet
+        panel.border = element_rect(color = "black"),
         # Remove the y axis text
         axis.text.y = element_blank())
+
+# Maybe I should just restrict the width of the panels
+#   and add the regular legend back to where it was
+facet_plot <- base_plot + 
+  # Limit the size of each facet to the range of the CIs
+  scale_x_continuous(limits = c(-1.7, 2.6)) #+
+  # Add the legend
+  #theme(legend.position = "right")

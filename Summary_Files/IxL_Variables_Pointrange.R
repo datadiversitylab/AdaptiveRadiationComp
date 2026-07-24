@@ -5,7 +5,7 @@ library(ggplot2)
 library(reshape2)
 
 # Read dataset
-dat <- read.csv("Summary_Files/IxL_distocc_2_17.csv")
+dat <- read.csv("Summary_Files/IxL.csv")
 
 # If an island has an NA for dist_occ_islands,
 #  fill in the value from nearest_occ
@@ -31,16 +31,7 @@ m1$variable <- factor(m1$variable, levels = c("dist_mainland", "area",
                                               "max_elev", "mean_csi",
                                               "sd_csi", "TRI"))
 
-ggplot(m1, aes(x = archipelago, y = value)) +
-  geom_boxplot(aes(fill = archipelago)) +
-  scale_fill_manual(values = c("carib" = "#E69F00", "galap" = "#56B4E9", "hawaii" = "#CC79A7")) +
-  # Add free_y scale so they can vary
-  facet_wrap(~ variable, scales = "free_y") +
-  theme_minimal() +
-  # Remove outer axis labels
-  labs(x = "", y = "")
-
-##### Instead of Boxplot, plot means and add standard error bars #####
+##### Plot means and add standard error bars #####
 ggplot(m1, aes(x = archipelago, y = value)) +
   # Use stat_summary to quickly calculate mean and standard error
   stat_summary(fun = "mean", geom = "point", size = 2) +
@@ -68,8 +59,39 @@ ggplot(m1, aes(x = archipelago, y = value)) +
   # Remove gridlines, add axes in gray
   theme(panel.grid = element_blank(),
         axis.line = element_line(colour = "gray70", linewidth = 0.5))
-        # Angle tick text
-        #axis.text.x = element_text(angle = 90, hjust = 1))
-  # theme(panel.grid = element_blank(),
-  #       strip.background = element_rect(fill = "grey95", color = "grey95"),
-  #       strip.text = element_text(color = "black", face = "bold"))
+
+##### Plot just the range of the areas #####
+# Filter m1 to only include area
+area_dat <- m1[which(m1$variable == "area"), ]
+
+# Convert to km^2
+area_dat$value <- area_dat$value/1e+6
+
+# Add the okina for Hawaii (\u02BB)
+library(showtext)
+# Maybe I should use a different font...
+font_add_google("Noto Sans", "noto")
+showtext_auto()
+
+cairo_pdf("testing_area_pointranges.pdf")
+ggplot(area_dat, aes(x = archipelago, y = value)) +
+  # Change to log scale
+  scale_y_log10() +
+  # Use stat_summary to quickly calculate mean, min, and max
+  stat_summary(fun = mean, fun.min = min, fun.max = max, geom = "pointrange") +
+  # Add dotted horizontal line at y = 986 km^2 (the smallest breakpoint - Scalesia)
+  geom_hline(yintercept = 986, linetype = "dotted") +
+  # Add title and outer axis labels
+  labs(title = "Range of Island Areas") +
+  xlab("Archipelago") +
+  ylab(expression("Area " * "(km"^2 * ")")) +
+  # Change per-plot x-axis labels
+  scale_x_discrete(labels = c("Caribbean", "Galápagos", "Hawai\u02BBi")) +
+  theme_minimal() +
+  # Remove gridlines, add axes in gray, change font family and size
+  theme(axis.text.x = element_text(family = "noto"),
+        axis.text.y = element_text(family = "noto"),
+        panel.grid = element_blank(),
+        axis.line = element_line(colour = "gray70", linewidth = 0.5),
+        text = element_text(size = 20))
+dev.off()

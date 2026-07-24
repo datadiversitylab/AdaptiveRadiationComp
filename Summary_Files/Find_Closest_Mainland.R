@@ -35,10 +35,10 @@ name <- c("Africa_Eurasia", "North_South_America", "Antarctica", "Australia")
 continents$name <- name
 
 # Save as an RDS for now
-saveRDS(continents, file = "continents.rds")
+saveRDS(continents, file = "Summary_Files/continents.rds")
 
 ## Step 2: Find the shortest distance to any continent polygon from each island
-continents <- readRDS("continents.rds")
+continents <- readRDS("Summary_Files/continents.rds")
 
 # Galapagos #
 # I can't use the centroid method from the island-to-island distance calculation

@@ -340,7 +340,7 @@ plot_grid(
 )
 dev.off()
 
-## What if the SARs were all scales to have the same limits?
+## What if the SARs were all scaled to have the same limits?
 lim_af <- af_SAR + xlim(10,26) + ylim(0,5)
 lim_fs <- fs_SAR + xlim(10,26) + ylim(0,5)
 lim_st <- st_SAR + xlim(10,26) + ylim(0,5)
