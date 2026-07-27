@@ -1,4 +1,4 @@
-# A script to fix the accents in our datasets
+# Functions for fixing the accents in our datasets
 
 ##### Galapagos #####
 fixnames_galap <- function(dat){

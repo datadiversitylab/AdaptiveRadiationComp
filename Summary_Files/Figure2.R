@@ -116,9 +116,7 @@ carib <- readRDS("Caribbean/Data/carib_final.rds")
 # Create a new column that says whether the island includes taxon 1, taxon 2, or both
 # Read in lineage data
 # Anole occurrences with native/nonnative designation
-anole_dat <- read.csv("Caribbean/anole_filter_testing.csv")
-# Include only natively occurring records
-anole_dat <- anole_dat[which(anole_dat$native == 1),]
+anole_dat <- read.csv("Caribbean/anolis_occs.csv")
 
 frog_dat <- read.csv("Caribbean/Data/Eleutherodactylus_Curated.csv")
 

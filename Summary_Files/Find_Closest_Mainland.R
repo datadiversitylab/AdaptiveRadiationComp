@@ -6,6 +6,11 @@
 library(rnaturalearth)
 library(sf)
 
+# Read in final versions of archipelago geometry
+galap_final <- readRDS("Galapagos/Data/galap_final.rds")
+hawaii_wgs84 <- readRDS("Hawaiian/Data/hawaii_wgs84.rds")
+carib_final <- readRDS("Caribbean/Data/carib_final.rds")
+
 # Returns as sf object by default. Would SpatVector be better?
 land <- ne_download(
   scale = "medium",

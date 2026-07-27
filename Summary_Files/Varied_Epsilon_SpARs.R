@@ -6,12 +6,9 @@ library(ssarp)
 source("Summary_Files/estimate_MS_AR.R")
 
 ##### Anolis #####
-anole_areas <- read.csv("Caribbean/Data/Anolis_areas.csv")
+anole_areas <- read.csv("Caribbean/Data/Anolis_occs.csv")
 
-# The tip labels on the tree are epithets
-colnames(anole_areas)[2] <- "specificEpithet"
-
-anole_tree <- read.tree("Caribbean/Data/Patton_Anolis_Trimmed.tree")
+anole_tree <- read.tree("Caribbean/Data/Patton_Anolis.tree")
 
 # Estimate diversification rates with epsilon of: 0, 0.5, and 0.9
 # Then plot the SpAR
@@ -138,18 +135,20 @@ silver_SpAR <- create_spar(silver_epsilon09, visualize = TRUE, npsi = 1)
 saveRDS(silver_SpAR, "Hawaiian/Data/silver_SpAR_e09.rds")
 
 ##### Tetragnatha #####
-spider_occs <- read.csv("Hawaiian/Data/tetragnatha_filtered_occs.csv")
+spider_occs <- read.csv("Hawaiian/Data/Tetragnatha_Areas.csv")
+# Make sure that the Species column is called "specificEpithet"
+colnames(spider_occs)[3] <- "specificEpithet"
 spider_tree <- read.tree("Hawaiian/Data/Tetragnatha_snatcher")
 
 epsilon_0 <- estimate_MS_AR(tree = spider_tree, label_type = "epithet", 
                             occurrences = spider_occs, epsilon = 0)
-spider_SpAR <- create_spar(epsilon_0, visualize = TRUE, npsi = 0)
+spider_SpAR <- create_spar(epsilon_0, visualize = TRUE, npsi = 1)
 saveRDS(spider_SpAR, "Hawaiian/Data/spider_SpAR_e0.rds")
 
 epsilon_0.5 <- estimate_MS_AR(tree = spider_tree, label_type = "epithet", 
                             occurrences = spider_occs, epsilon = 0.5)
 spider_SpAR <- create_spar(epsilon_0.5, visualize = TRUE, npsi = 0)
-saveRDS(spider_SpAR, "Hawaiian/Data/tetragnatha_SpAR_e05.rds")
+saveRDS(spider_SpAR, "Hawaiian/Data/spider_SpAR_e05.rds")
 
 epsilon_0.9 <- estimate_MS_AR(tree = spider_tree, label_type = "epithet", 
                               occurrences = spider_occs, epsilon = 0.9)
