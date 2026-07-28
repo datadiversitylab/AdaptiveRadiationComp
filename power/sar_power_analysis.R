@@ -101,20 +101,3 @@ print(results)
 # power < 0.8 means underpowered.
 # power > 0.8 with the breakpoint in range implies that
 # the null result is real and this is a finding.
-
-# Additional...how many islands would be needed to settle the question?
-sample_sizes <- c(6, 8, 10, 15, 20, 30)  
-area_low     <- 17   
-area_high    <- 25
-
-power_by_n <- sapply(sample_sizes, function(n) {
-  sim_areas <- seq(area_low, area_high, length.out = n)
-  estimate_power(sim_areas, breakpoint, slope1, slope2, intercept, resid_sd, n_sim)
-})
-
-curve_out <- data.frame(n_islands = sample_sizes, power = round(power_by_n, 3))
-print(curve_out)
-
-plot(curve_out$n_islands, curve_out$power, type = "b", pch = 19,
-     ylim = c(0, 1), xlab = "Number of islands", ylab = "Power to detect breakpoint")
-abline(h = 0.8, lty = 2, col = "red")
