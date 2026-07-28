@@ -1,0 +1,123 @@
+genericName,specificEpithet,Third,First,Second,areas
+Geospiza,fortis,North Seymour,NA,NA,1.91E+06
+Geospiza,fuliginosa,North Seymour,NA,NA,1.91E+06
+Geospiza,scandens,North Seymour,NA,NA,1.91E+06
+Certhidea,olivacea,North Seymour,NA,NA,1.91E+06
+Geospiza,fortis,Baltra,NA,NA,2.54E+07
+Geospiza,fuliginosa,Baltra,NA,NA,2.54E+07
+Geospiza,scandens,Baltra,NA,NA,2.54E+07
+Certhidea,olivacea,Baltra,NA,NA,2.54E+07
+Geospiza,magnirostris,Isabela,NA,NA,4.73E+09
+Geospiza,fortis,Isabela,NA,NA,4.73E+09
+Geospiza,fuliginosa,Isabela,NA,NA,4.73E+09
+Geospiza,difficilis,Isabela,NA,NA,4.73E+09
+Geospiza,scandens,Isabela,NA,NA,4.73E+09
+Camarhynchus,psittacula,Isabela,NA,NA,4.73E+09
+Camarhynchus,parvulus,Isabela,NA,NA,4.73E+09
+Platyspiza,crassirostris,Isabela,NA,NA,4.73E+09
+Cactospiza,pallida,Isabela,NA,NA,4.73E+09
+Cactospiza,heliobates,Isabela,NA,NA,4.73E+09
+Certhidea,olivacea,Isabela,NA,NA,4.73E+09
+Geospiza,magnirostris,Fernandina,NA,NA,6.48E+08
+Geospiza,fortis,Fernandina,NA,NA,6.48E+08
+Geospiza,fuliginosa,Fernandina,NA,NA,6.48E+08
+Geospiza,difficilis_F,Fernandina,NA,NA,6.48E+08
+Camarhynchus,psittacula,Fernandina,NA,NA,6.48E+08
+Camarhynchus,parvulus,Fernandina,NA,NA,6.48E+08
+Platyspiza,crassirostris,Fernandina,NA,NA,6.48E+08
+Cactospiza,pallida,Fernandina,NA,NA,6.48E+08
+Cactospiza,heliobates,Fernandina,NA,NA,6.48E+08
+Certhidea,olivacea,Fernandina,NA,NA,6.48E+08
+Geospiza,magnirostris,Santiago,NA,NA,5.77E+08
+Geospiza,fortis,Santiago,NA,NA,5.77E+08
+Geospiza,fuliginosa_S,Santiago,NA,NA,5.77E+08
+Geospiza,difficilis_S,Santiago,NA,NA,5.77E+08
+Geospiza,scandens,Santiago,NA,NA,5.77E+08
+Camarhynchus,psittacula,Santiago,NA,NA,5.77E+08
+Camarhynchus,parvulus,Santiago,NA,NA,5.77E+08
+Platyspiza,crassirostris,Santiago,NA,NA,5.77E+08
+Cactospiza,pallida,Santiago,NA,NA,5.77E+08
+Certhidea,olivacea_S,Santiago,NA,NA,5.77E+08
+Geospiza,magnirostris,Rabida,NA,NA,4.97E+06
+Geospiza,fortis,Rabida,NA,NA,4.97E+06
+Geospiza,fuliginosa,Rabida,NA,NA,4.97E+06
+Geospiza,scandens,Rabida,NA,NA,4.97E+06
+Camarhynchus,psittacula,Rabida,NA,NA,4.97E+06
+Camarhynchus,parvulus,Rabida,NA,NA,4.97E+06
+Platyspiza,crassirostris,Rabida,NA,NA,4.97E+06
+Certhidea,olivacea,Rabida,NA,NA,4.97E+06
+Geospiza,magnirostris,Pinzon,NA,NA,1.80E+07
+Geospiza,fortis,Pinzon,NA,NA,1.80E+07
+Geospiza,fuliginosa,Pinzon,NA,NA,1.80E+07
+Geospiza,scandens,Pinzon,NA,NA,1.80E+07
+Camarhynchus,psittacula,Pinzon,NA,NA,1.80E+07
+Camarhynchus,parvulus,Pinzon,NA,NA,1.80E+07
+Platyspiza,crassirostris,Pinzon,NA,NA,1.80E+07
+Cactospiza,pallida,Pinzon,NA,NA,1.80E+07
+Certhidea,olivacea,Pinzon,NA,NA,1.80E+07
+Geospiza,magnirostris,Santa Cruz,NA,NA,9.87E+08
+Geospiza,fortis_S2,Santa Cruz,NA,NA,9.87E+08
+Geospiza,fuliginosa_Z,Santa Cruz,NA,NA,9.87E+08
+Geospiza,difficilis,Santa Cruz,NA,NA,9.87E+08
+Geospiza,scandens,Santa Cruz,NA,NA,9.87E+08
+Camarhynchus,psittacula,Santa Cruz,NA,NA,9.87E+08
+Camarhynchus,parvulus,Santa Cruz,NA,NA,9.87E+08
+Platyspiza,crassirostris,Santa Cruz,NA,NA,9.87E+08
+Cactospiza,pallida,Santa Cruz,NA,NA,9.87E+08
+Certhidea,olivacea,Santa Cruz,NA,NA,9.87E+08
+Geospiza,magnirostris,Santa Fe,NA,NA,2.46E+07
+Geospiza,fortis,Santa Fe,NA,NA,2.46E+07
+Geospiza,fuliginosa,Santa Fe,NA,NA,2.46E+07
+Geospiza,scandens,Santa Fe,NA,NA,2.46E+07
+Camarhynchus,psittacula,Santa Fe,NA,NA,2.46E+07
+Camarhynchus,parvulus,Santa Fe,NA,NA,2.46E+07
+Platyspiza,crassirostris,Santa Fe,NA,NA,2.46E+07
+Certhidea,olivacea,Santa Fe,NA,NA,2.46E+07
+Geospiza,magnirostris,San Cristobal,NA,NA,5.60E+08
+Geospiza,fortis,San Cristobal,NA,NA,5.60E+08
+Geospiza,fuliginosa,San Cristobal,NA,NA,5.60E+08
+Geospiza,difficilis,San Cristobal,NA,NA,5.60E+08
+Geospiza,scandens,San Cristobal,NA,NA,5.60E+08
+Camarhynchus,parvulus,San Cristobal,NA,NA,5.60E+08
+Platyspiza,crassirostris,San Cristobal,NA,NA,5.60E+08
+Cactospiza,pallida,San Cristobal,NA,NA,5.60E+08
+Certhidea,olivacea,San Cristobal,NA,NA,5.60E+08
+Geospiza,fuliginosa,Espanola,NA,NA,6.11E+07
+Geospiza,conirostris,Espanola,NA,NA,6.11E+07
+Certhidea,olivacea,Espanola,NA,NA,6.11E+07
+Geospiza,magnirostris,Floreana,NA,NA,1.73E+08
+Geospiza,fortis,Floreana,NA,NA,1.73E+08
+Geospiza,fuliginosa,Floreana,NA,NA,1.73E+08
+Geospiza,difficilis,Floreana,NA,NA,1.73E+08
+Geospiza,scandens,Floreana,NA,NA,1.73E+08
+Camarhynchus,psittacula,Floreana,NA,NA,1.73E+08
+Camarhynchus,pauper,Floreana,NA,NA,1.73E+08
+Camarhynchus,parvulus,Floreana,NA,NA,1.73E+08
+Platyspiza,crassirostris,Floreana,NA,NA,1.73E+08
+Certhidea,olivacea,Floreana,NA,NA,1.73E+08
+Geospiza,magnirostris,Genovesa,NA,NA,1.38E+07
+Geospiza,difficilis,Genovesa,NA,NA,1.38E+07
+Geospiza,conirostris_G,Genovesa,NA,NA,1.38E+07
+Certhidea,olivacea,Genovesa,NA,NA,1.38E+07
+Geospiza,magnirostris,Marchena,NA,NA,1.32E+08
+Geospiza,fortis,Marchena,NA,NA,1.32E+08
+Geospiza,fuliginosa,Marchena,NA,NA,1.32E+08
+Geospiza,scandens,Marchena,NA,NA,1.32E+08
+Camarhynchus,psittacula,Marchena,NA,NA,1.32E+08
+Platyspiza,crassirostris,Marchena,NA,NA,1.32E+08
+Certhidea,olivacea,Marchena,NA,NA,1.32E+08
+Geospiza,magnirostris,Pinta,NA,NA,5.97E+07
+Geospiza,fortis,Pinta,NA,NA,5.97E+07
+Geospiza,fuliginosa,Pinta,NA,NA,5.97E+07
+Geospiza,difficilis_P,Pinta,NA,NA,5.97E+07
+Geospiza,scandens,Pinta,NA,NA,5.97E+07
+Camarhynchus,psittacula,Pinta,NA,NA,5.97E+07
+Camarhynchus,parvulus,Pinta,NA,NA,5.97E+07
+Platyspiza,crassirostris,Pinta,NA,NA,5.97E+07
+Certhidea,olivacea,Pinta,NA,NA,5.97E+07
+Geospiza,magnirostris,Darwin,NA,NA,6.64E+05
+Geospiza,difficilis_D,Darwin,NA,NA,6.64E+05
+Certhidea,olivacea,Darwin,NA,NA,6.64E+05
+Geospiza,magnirostris,Wolf,NA,NA,1.24E+06
+Geospiza,difficilis,Wolf,NA,NA,1.24E+06
+Certhidea,olivacea,Wolf,NA,NA,1.24E+06

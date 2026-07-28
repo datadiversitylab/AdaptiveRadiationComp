@@ -119,8 +119,8 @@ dist_df1$Island <- stringi::stri_unescape_unicode(dist_df1$Island)
 # Start with dist_cent_df from above
 
 # Figure out which islands have occurrences
-anole_df <- read.csv("Caribbean/Data/Anolis_name_area.csv")
-anole_islands <- anole_df$name
+anole_df <- read.csv("Caribbean/Data/anolis_occs.csv")
+anole_islands <- anole_df$island
 
 # Unique islands with occurrences
 unique_islands <- unique(anole_islands)
@@ -155,7 +155,7 @@ carib_final <- readRDS("Caribbean/Data/carib_final.rds")
 carib_final <- vect(carib_final)
 
 # Read in IxL dataset (the basis for everything)
-ixl <- read.csv("Summary_Files/IxL_distmainland.csv")
+ixl <- read.csv("Summary_Files/IxL.csv")
 
 # Filter to anoles
 dat <- ixl[which(ixl$lineage == "anolis"),]
@@ -163,7 +163,7 @@ dat <- ixl[which(ixl$lineage == "anolis"),]
 dat <- dat[which(dat$richness > 0),]
 
 # Fix the names
-source("FixNames.R")
+source("Summary_Files/FixNames.R")
 dat <- fixnames_carib(dat)
 ixl <- fixnames_carib(ixl)
 

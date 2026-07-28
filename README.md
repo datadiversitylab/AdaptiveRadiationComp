@@ -1,10 +1,20 @@
 # Repo for Comparing Global Adaptive Radiations Through Species- and Speciation-Area Relationships
 
-# WORK IN PROGRESS
-
 ## File Structure
+* "Caribbean" directory - Contains files specific to Caribbean *Anolis* and *Eleutherodactylus*. Includes two subdirectories: "Data" and "Shapefile"
+  - "Data" directory - Includes raw data and R objects used in determining species-area relationships, speciation-area relationships, and taxon-specific distance metrics.
+  - "Shapefile" directory - Includes files needed to read the shapefile for the Caribbean islands.
+* "Galapagos" directory - Contains files specific to Galapagos finches and *Scalesia*. Includes two subdirectories: "Data" and "Shapefile"
+  - "Data" directory - Includes raw data and R objects used in determining species-area relationships, speciation-area relationships, and taxon-specific distance metrics.
+  - "Shapefile" directory - Includes files needed to read the shapefile for the Galapagos islands.
+* "habitat_diversity" directory - Contains files needed to estimate habitat heterogeneity for taxa of interest, along with IUCN shapefiles used to determine ranges (when applicable).
+* "Hawaiian" directory - Contains files specific to Hawaiian silverswords and *Tetragnatha*. Includes two subdirectories: "Data" and "Shapefile"
+  - "Data" directory - Includes raw data and R objects used in determining species-area relationships, speciation-area relationships, and taxon-specific distance metrics.
+  - "Shapefile" directory - Includes files needed to read the shapefile for the Hawaiian islands.
 * "Summary_Files" directory - Contains the following files used to generate data, R objects, and figures that represent the full dataset.
   - continents.rds – An R object containing spatial information related to the continents closest to the archipelagos of interest.
+  - CSI.R - An R script that extracts Climate Shift Index values for all islands in the three archipelagos of interest
+  - csi_past.tiff - From Herrando-Moraira et al. 2022. A GEOtiff that contains Climate Shift Index data, used with CSI.R. 
   - estimate_MS_AR.R – Contains an edited version of the “estimate_MS” function from the ssarp R package that allows for diversification rate estimation with different epsilon values.
   - Figure2.R – Generates Figure 2, which visualizes the islands on which species in each taxon occur, along with their associated species-area relationships.
   - Find_Closest_Mainland.R – Uses global polygons from Natural Earth to determine the distance between each island in the dataset and the closest mainland.
@@ -20,9 +30,3 @@
   - SpAR_Figures.R – Generates Figures 3, S3, and S4 depending on what epsilon value the user chooses.
   - Varied_Epsilon_SpARs.R – Generates speciation-area relationships for all taxa using three different values for epsilon: 0, 0.5, and 0.9.
 
-
-## File Structure (Old)
- * "Caribbean" directory: includes a script and associated data (in "Caribbean/Data") for creating SARs and SpARs for *Anolis* lizards, *Eleutherodactylus* frogs, and *Tropidophis* snakes.
- * "Galapagos" directory: includes a script and associated data (in "Galapagos/Data") for creating SARs and SpARs for *Microlophus* lizards, Galápagos finches, and *Scalesia* plants. This directory also includes a "Shapefile" subdirectory and the "Galapagos_Finch_Isolation.R" R script for calculating island isolation metrics.
- * "Hawaiian" directory: includes a script and associated data (in "Hawaiian/Data") for creating SARs and SpARs for *Pritchardia* palms, Hawaiian Silverswords, and *Tetragnatha* spiders.
- * "Slope_Comparisons" directory: includes scripts and data for my original jackknife comparison of SAR and SpAR slopes

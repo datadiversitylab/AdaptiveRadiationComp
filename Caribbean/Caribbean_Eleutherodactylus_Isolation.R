@@ -147,9 +147,9 @@ carib_final <- readRDS("Caribbean/Data/carib_final.rds")
 carib_final <- vect(carib_final)
 
 # Read in IxL dataset (the basis for everything)
-ixl <- read.csv("Summary_Files/IxL_distmainland.csv")
+ixl <- read.csv("Summary_Files/IxL.csv")
 
-# Filter to anoles
+# Filter to eleutherodactylus
 dat <- ixl[which(ixl$lineage == "eleutherodactylus"),]
 # Include only islands that have an occurrence on them
 dat <- dat[which(dat$richness > 0),]
