@@ -19,14 +19,15 @@ slope2 <- mean(anole_SAR$segObj[[1]][3], frog_SAR$segObj[[1]][3])
 intercept <- mean(anole_SAR$segObj[[1]][1], frog_SAR$segObj[[1]][1])
 
 # Areas
-caribbean <- read.csv("Caribbean/carib_total.csv")
-galapagos <- read.csv("Galapagos/galap_total.csv")
-hawaii <- read.csv("Hawaiian/hawaii_total.csv")
+islands <- read.csv("Summary_Files/island_traits.csv")
+caribbeanarea <- islands[islands$archipelago == "carib","area"]
+hawaiiarea <- islands[islands$archipelago == "hawaii","area"]
+galapagosarea <- islands[islands$archipelago == "galap","area"]
 
 areas <- list(
-  Caribbean = log(caribbean$area),  
-  Galapagos = log(galapagos$area),  
-  Hawaii    = log(hawaii$area)  
+  Caribbean = log(caribbeanarea),  
+  Galapagos = log(galapagosarea),  
+  Hawaii    = log(hawaiiarea)  
 )
 
 # Number of simulations per archipelago
