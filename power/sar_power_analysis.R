@@ -13,16 +13,20 @@ caribbean_breakpoint_eleuth <- 21.2
 breakpoint   <- mean(c(caribbean_breakpoint_anolis, caribbean_breakpoint_eleuth))
 
 # Slopes and intercept (Caribbean)
-resid_sd <- mean(sd(residuals(anole_SAR$segObj)), sd(residuals(frog_SAR$segObj)))
-slope1 <- mean(anole_SAR$segObj[[1]][2], frog_SAR$segObj[[1]][2])
-slope2 <- mean(anole_SAR$segObj[[1]][3], frog_SAR$segObj[[1]][3])
-intercept <- mean(anole_SAR$segObj[[1]][1], frog_SAR$segObj[[1]][1])
+resid_sd  <- mean(c(sd(residuals(anole_SAR$segObj)), sd(residuals(frog_SAR$segObj))))
+slope1    <- mean(c(anole_SAR$segObj[[1]][2], frog_SAR$segObj[[1]][2]))
+slope2    <- mean(c(anole_SAR$segObj[[1]][3], frog_SAR$segObj[[1]][3]))
+intercept <- mean(c(anole_SAR$segObj[[1]][1], frog_SAR$segObj[[1]][1]))
 
 # Areas
-islands <- read.csv("Summary_Files/island_traits.csv")
-caribbeanarea <- islands[islands$archipelago == "carib","area"]
-hawaiiarea <- islands[islands$archipelago == "hawaii","area"]
-galapagosarea <- islands[islands$archipelago == "galap","area"]
+galapagosarea <- read.csv("Galapagos/galap_total.csv")
+galapagosarea <- galapagosarea[-duplicated(galapagosarea$name), "area"]
+
+hawaiiarea <- read.csv("Hawaiian/hawaii_total.csv")
+hawaiiarea <- hawaiiarea[-duplicated(hawaiiarea$name),"area"]
+
+caribbeanarea <- read.csv("Caribbean/carib_islands.csv")
+caribbeanarea <- caribbeanarea$area
 
 areas <- list(
   Caribbean = log(caribbeanarea),  
@@ -30,8 +34,11 @@ areas <- list(
   Hawaii    = log(hawaiiarea)  
 )
 
+# brief check
+sapply(areas, function(a) c(below = sum(a < breakpoint), above = sum(a > breakpoint)))
+
 # Number of simulations per archipelago
-n_sim <- 1000
+n_sim <- 5000
 
 # Simulate log richness from a two-slope SAR w/ noise
 simulate_richness <- function(log_area, bp, slope1, slope2, intercept, resid_sd) {
@@ -96,6 +103,8 @@ for (i in seq_len(nrow(results))) {
 
 results$power <- round(results$power, 3)
 print(results)
+
+write.csv(results, "power/power.csv")
 
 # bp_in_range = FALSE means the archipelago has no islands near the threshold.
 # power < 0.8 means underpowered.
