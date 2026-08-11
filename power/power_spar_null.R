@@ -4,19 +4,19 @@
 set.seed(42)
 library(segmented)
 
-# Load SAR objects
-anole_SAR <- readRDS("Caribbean/Data/anole_SAR.rds")
-frog_SAR <- readRDS("Caribbean/Data/frog_SAR.rds")
+# Load SpAR objects
+anole_SAR <- readRDS("Caribbean/Data/anolis_spar_e0.rds")
+frog_SAR <- readRDS("Caribbean/Data/frog_SpAR_e0.rds")
 
 # Breakpoint to test
-caribbean_breakpoint_anolis <- 22.2
-caribbean_breakpoint_eleuth <- 21.2
+caribbean_breakpoint_anolis <- 22.3
+caribbean_breakpoint_eleuth <- 21.7
 breakpoint   <- mean(c(caribbean_breakpoint_anolis, caribbean_breakpoint_eleuth))
 
 # Slopes and intercept (Caribbean)
 resid_sd  <- mean(c(sd(residuals(anole_SAR$segObj)), sd(residuals(frog_SAR$segObj))))
 slope1    <- mean(c(slope(anole_SAR$segObj)[[1]][1,1], slope(frog_SAR$segObj)[[1]][1,1]))
-slope2    <- mean(c(slope(anole_SAR$segObj)[[1]][2,1], slope(frog_SAR$segObj)[[1]][2,1]))
+slope2    <- slope1
 intercept <- mean(c(anole_SAR$segObj[[1]][1], frog_SAR$segObj[[1]][1]))
 
 # Areas
@@ -60,11 +60,11 @@ fit_at_breakpoint <- function(log_area, log_rich, bp) {
 detect_breakpoint <- function(log_area, log_rich, n_grid = 50) {
   grid <- seq(min(log_area) + 0.5, max(log_area) - 0.5, length.out = n_grid)
   aic_grid <- sapply(grid, function(bp) AIC(fit_at_breakpoint(log_area, log_rich, bp)))
-
+  
   # Penalize by 2 since the breakpoint is itself a parameter
   aic_break <- min(aic_grid) + 2
   aic_line  <- AIC(lm(log_rich ~ log_area))
-
+  
   list(detected   = (aic_line - aic_break) > 2,
        breakpoint = grid[which.min(aic_grid)])
 }
@@ -104,7 +104,7 @@ for (i in seq_len(nrow(results))) {
 
 print(results)
 
-write.csv(results, "power/power.csv")
+write.csv(results, "power/power_spar_null.csv")
 
 # bp_in_range = FALSE means the archipelago has no islands near the threshold.
 # power < 0.8 means underpowered.
