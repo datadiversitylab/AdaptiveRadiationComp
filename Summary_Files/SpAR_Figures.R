@@ -209,7 +209,7 @@ showtext_auto()
 # Set the font theme outside of the grid so it applies to everything
 theme_set(theme_minimal(base_family = "noto"))
 
-# cairo_pdf("Summary_Files/SpARs_e09.pdf", width = 12, height = 4)
+# cairo_pdf("Figure3.pdf", width = 12, height = 4)
 p <- plot_grid(af_SpAR,
           fs_SpAR,
           st_SpAR,

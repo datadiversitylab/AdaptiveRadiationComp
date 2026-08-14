@@ -12,7 +12,7 @@ hawaii <- readRDS("Hawaiian/Data/hawaii_wgs84.rds")
 # Create a new column that says whether the island includes taxon 1, taxon 2, or both
 # Read in lineage data
 spider_dat <- read.csv("Hawaiian/Data/Tetragnatha_Areas.csv")
-silver_dat <- read.csv("Hawaiian/Data/Silversword_Areas.csv")
+silver_dat <- read.csv("Hawaiian/Data/silversword_occs.csv")
 
 # Determine what islands are represented in each taxon
 spider_islands <- unique(spider_dat$Second)
@@ -116,9 +116,9 @@ carib <- readRDS("Caribbean/Data/carib_final.rds")
 # Create a new column that says whether the island includes taxon 1, taxon 2, or both
 # Read in lineage data
 # Anole occurrences with native/nonnative designation
-anole_dat <- read.csv("Caribbean/anolis_occs.csv")
+anole_dat <- read.csv("Caribbean/Data/anolis_occs.csv")
 
-frog_dat <- read.csv("Caribbean/Data/Eleutherodactylus_Curated.csv")
+frog_dat <- read.csv("Caribbean/Data/Eleutherodactylus_areas_2.csv")
 
 # Determine what islands are represented in each taxon
 anole_islands <- unique(anole_dat$island)
@@ -308,7 +308,7 @@ showtext_auto()
 # Set the font theme outside of the grid so it applies to everything
 theme_set(theme_minimal(base_family = "noto"))
 
-cairo_pdf("testing_fig1_legs.pdf")
+# cairo_pdf("Figure2.pdf")
 plot_grid(
   # Maps
   plot_grid(carib_plot + theme(legend.position = "none"),
@@ -336,32 +336,32 @@ plot_grid(
   ncol = 3,
   rel_widths = c(0.9, 0.4, 1)
 )
-dev.off()
+# dev.off()
 
 ## What if the SARs were all scaled to have the same limits?
-lim_af <- af_SAR + xlim(10,26) + ylim(0,5)
-lim_fs <- fs_SAR + xlim(10,26) + ylim(0,5)
-lim_st <- st_SAR + xlim(10,26) + ylim(0,5)
-
-pdf("testing_fig1_lims.pdf")
-plot_grid(
-  plot_grid(carib_plot + theme(legend.position = "none"),
-            galap_plot + theme(legend.position = "none"),
-            hawaii_plot + theme(legend.position = "none"),
-            align = "v",
-            ncol = 1,
-            # Add labels to the left of maps (x = 0)
-            # And at the top of each row (y = 1)
-            labels = c("a)", "b)", "c)"),
-            label_x = 0,
-            label_y = 1),         
-  one_leg,
-  plot_grid(lim_af,
-            lim_fs,
-            lim_st,
-            align = "v",
-            ncol = 1),
-  ncol = 3,
-  rel_widths = c(0.9, 0.3, 1)
-)
-dev.off()
+# lim_af <- af_SAR + xlim(10,26) + ylim(0,5)
+# lim_fs <- fs_SAR + xlim(10,26) + ylim(0,5)
+# lim_st <- st_SAR + xlim(10,26) + ylim(0,5)
+# 
+# pdf("testing_fig1_lims.pdf")
+# plot_grid(
+#   plot_grid(carib_plot + theme(legend.position = "none"),
+#             galap_plot + theme(legend.position = "none"),
+#             hawaii_plot + theme(legend.position = "none"),
+#             align = "v",
+#             ncol = 1,
+#             # Add labels to the left of maps (x = 0)
+#             # And at the top of each row (y = 1)
+#             labels = c("a)", "b)", "c)"),
+#             label_x = 0,
+#             label_y = 1),         
+#   one_leg,
+#   plot_grid(lim_af,
+#             lim_fs,
+#             lim_st,
+#             align = "v",
+#             ncol = 1),
+#   ncol = 3,
+#   rel_widths = c(0.9, 0.3, 1)
+# )
+# dev.off()

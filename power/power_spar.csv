@@ -1,4 +1,4 @@
-"","archipelago","n_islands","area_min","area_max","bp_in_range","power"
-"1","Caribbean",408,14.1,25.4,TRUE,1
-"2","Galapagos",32,13.4,22.3,TRUE,0.1934
-"3","Hawaii",11,19.7,23.1,TRUE,0.5366
+"archipelago","n_islands","area_min","area_max","bp_in_range","power"
+"Caribbean",458,13.9,25.4,TRUE,1
+"Galapagos",32,13.4,22.3,TRUE,0.1994
+"Hawaii",11,19.7,23.1,TRUE,0.5418

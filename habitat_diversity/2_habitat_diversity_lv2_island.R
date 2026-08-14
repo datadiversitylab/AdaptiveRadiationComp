@@ -1,31 +1,30 @@
+# Estimating habitat heterogeneity for each lineage of interest
+# NOTE: Assumes that the working directory is the root of the GitHub repo
+
+# Load libraries
 library(terra)
 library(sf)
 library(dplyr)
-library(here)
 
-# habitat_lvl2 <- rast(here("habitat_diversity",
-#                           "iucn_habitatclassification_composite_lvl2_ver004_sub.tif"))
-
+# This file is created in 1_crop_habitat_raster.R
+# It is unfortunately too big to include in the GitHub repo
 habitat_lvl2 <- rast("iucn_habitatclassification_composite_lvl2_ver004_sub.tif")
 
 ##### Hawaii #####
 
 # HawaiianAsteraceae (from IUCN; geo [hawaii st.] and taxonomic [asteraceae] restriction)
-#ranges <- vect(here("habitat_diversity", "HawaiianAsteraceae/data_0.shp"))
 ranges <- vect("habitat_diversity/HawaiianAsteraceae/data_0.shp")
 
 # ISLAND-SPECIFIC
 # Using hawaii_wgs84 object from "Hawaii/Hawaiian_Elevation.R"
+hawaii_wgs84 <- readRDS("Hawaiian/Data/hawaii_wgs84.rds")
 # Crop ranges
 range_crop <- crop(ranges, hawaii_wgs84)
 # Change hawaii_wgs84 to SpatVector
 hawaii_vec <- vect(hawaii_wgs84)
 combo_range <- intersect(range_crop, hawaii_vec)
 
-# What if I just used intersect with the habitat shapefile too?
-test <- intersect(combo_range, habitat_lvl2) # Too big
-
-# NEW PLAN: loop through each island/range combo polygon and grab the
+# Loop through each island/range combo polygon and grab the
 #  number of habitats using extract
 
 # Get island names
@@ -72,9 +71,9 @@ write.csv(habitat_df, "Hawaiian/Data/n_habitat_silverswords.csv", row.names = FA
 # occur_points <- vect(occur_clean, 
 #                      geom = c("decimalLongitude", "decimalLatitude"),
 #                      crs = "EPSG:4326")
-bloop <- read.csv("Hawaiian/Data/tetragnatha_filtered_occs.csv")
+dat <- read.csv("Hawaiian/Data/tetragnatha_filtered_occs.csv")
 
-occur_points <- vect(bloop,
+occur_points <- vect(dat,
                      geom = c("decimalLongitude", "decimalLatitude"),
                      crs = "EPSG:4326")
 
@@ -106,7 +105,7 @@ for(i in c(1:length(islands))){
 }
 
 colnames(habitat_df) <- c("Name", "n_habitat")
-write.csv(habitat_df, "Hawaiian/Data/NEW_n_habitat_tetragnatha.csv", row.names = FALSE)
+write.csv(habitat_df, "Hawaiian/Data/n_habitat_tetragnatha.csv", row.names = FALSE)
 
 ##### Galapagos #####
 
@@ -114,6 +113,7 @@ write.csv(habitat_df, "Hawaiian/Data/NEW_n_habitat_tetragnatha.csv", row.names =
 ranges <- vect(here("habitat_diversity", "GalapagosFinches/data_0.shp"))
 
 # Using galap_final object from "Galapagos/Galapagos_Elevation.R"
+galap_final <- readRDS("Galapagos/Data/galap_final.rds")
 # Crop ranges
 range_crop <- crop(ranges, galap_final)
 # Change galap_final to SpatVector
@@ -145,54 +145,15 @@ for(i in c(1:length(islands))){
 colnames(habitat_df) <- c("Name", "n_habitat")
 write.csv(habitat_df, "Galapagos/Data/n_habitat_finches.csv", row.names = FALSE)
 
-# Galapagos Scalesia (ranges from BIEN)
-library(BIEN)
-temp_dir <- file.path(tempdir(), "BIEN_temp")
-ranges <- BIEN_ranges_genus("Scalesia", directory = temp_dir)
-ranges <- lapply(ranges[,1], function(x) read_sf(dsn = temp_dir,layer = x))
-# Each list element is an sf object, so...
-
-# Combine all sf objects into one
-ranges_sf <- do.call(rbind, ranges)
-
-# Convert to SpatVector
-ranges_combined <- vect(ranges_sf)
-
-combo_range <- intersect(ranges_combined, galap_vec)
-
-# Loop through each island/range combo polygon and grab the
-#  number of habitats using extract
-
-# Get island names
-islands <- unique(combo_range$nombre)
-# Create empty list for results
-results <- list()
-
-for(i in islands){
-  # Grab island/range combo polygon for single island
-  single_island <- combo_range[combo_range$nombre == i, ]
-  
-  # Add extracted values to the results
-  results[[i]] <- extract(habitat_lvl2, single_island)
-}
-
-# Now, for each island, get the number of habitats
-habitat_df <- as.data.frame(matrix(nrow = length(islands), ncol = 2))
-for(i in c(1:length(islands))){
-  habitat_df[i,] <- c(islands[i], length(unique(results[[i]][,2])))
-}
-
-colnames(habitat_df) <- c("Name", "n_habitat")
-write.csv(habitat_df, "Galapagos/Data/n_habitat_scalesia.csv", row.names = FALSE)
-
-
-## Scalesia NEW with GBIF ##
+## Scalesia with GBIF ##
+# Using galap_final object from "Galapagos/Galapagos_Elevation.R"
+galap_final <- readRDS("Galapagos/Data/galap_final.rds")
 # Change galap_final to SpatVector
 galap_vec <- vect(galap_final)
 
-bloop <- read.csv("Galapagos/Data/scalesia_occs_NEW.csv")
+dat <- read.csv("Galapagos/Data/scalesia_occs_NEW.csv")
 
-occur_points <- vect(bloop,
+occur_points <- vect(dat,
                      geom = c("decimalLongitude", "decimalLatitude"),
                      crs = "EPSG:4326")
 
@@ -224,7 +185,7 @@ for(i in c(1:length(islands))){
 }
 
 colnames(habitat_df) <- c("Name", "n_habitat")
-write.csv(habitat_df, "Galapagos/Data/NEW_n_habitat_scalesia.csv", row.names = FALSE)
+write.csv(habitat_df, "Galapagos/Data/n_habitat_scalesia.csv", row.names = FALSE)
 
 ##### Caribbean #####
 
@@ -235,6 +196,7 @@ write.csv(habitat_df, "Galapagos/Data/NEW_n_habitat_scalesia.csv", row.names = F
 ranges <- vect("data_1.shp")
 
 # Using carib_final object from "Caribbean/Caribbean_Elevation.R"
+carib_final <- readRDS("Caribbean/Data/carib_final.rds")
 # Crop ranges
 range_crop <- crop(ranges, carib_final)
 # Change carib_final to SpatVector
@@ -270,6 +232,7 @@ write.csv(habitat_df, "Caribbean/Data/n_habitat_anolis.csv", row.names = FALSE)
 ranges <- vect(here("habitat_diversity", "CaribbeanEleuterodactylus/data_0.shp"))
 
 # Using carib_final object from "Caribbean/Caribbean_Elevation.R"
+carib_final <- readRDS("Caribbean/Data/carib_final.rds")
 # Crop ranges
 range_crop <- crop(ranges, carib_final)
 
@@ -299,19 +262,3 @@ for(i in c(1:length(islands))){
 
 colnames(habitat_df) <- c("Name", "n_habitat")
 write.csv(habitat_df, "Caribbean/Data/n_habitat_frogs.csv", row.names = FALSE)
-
-# # Export dataset
-# hd <- rbind(
-#   "Tetragnatha" = tg,
-#   "Scalesia" = sc,
-#   "Caribbean Eleuterodactylus" = ce,
-#   "Caribbean Anoles" = ca,
-#   "Galapagos Finches" = gl,
-#   "Hawaiian Asteraceae" = hw
-# )
-# 
-# colnames(hd) <- "n_habitats"
-# write.csv(hd, here("habitat_diversity", "habitat.diversity_lv2.csv"))
-
-
-

@@ -17,7 +17,7 @@ for(i in c(1:length(dat$name))){
 
 # Filter to just island-specific variables, and only ones that aren't correlated
 dat_island <- dat %>% dplyr::select(name, TRI, max_elev, mean_csi, sd_csi, area,
-                             dist_mainland, archipelago)
+                             dist_mainland, Nearest_Dist, archipelago)
 # Make sure each row is unique
 dat_island <- distinct(dat_island)
 
@@ -27,11 +27,13 @@ dat_island <- distinct(dat_island)
 m1 <- melt(dat_island)
 
 # Rearrange factor levels to be alphabetical?
-m1$variable <- factor(m1$variable, levels = c("dist_mainland", "area",
+m1$variable <- factor(m1$variable, levels = c("dist_mainland", "Nearest_Dist",
+                                              "area",
                                               "max_elev", "mean_csi",
                                               "sd_csi", "TRI"))
 
 ##### Plot means and add standard error bars #####
+# cairo_pdf("Figure1.pdf", width = 10, height = 3)
 ggplot(m1, aes(x = archipelago, y = value)) +
   # Use stat_summary to quickly calculate mean and standard error
   stat_summary(fun = "mean", geom = "point", size = 2) +
@@ -46,11 +48,12 @@ ggplot(m1, aes(x = archipelago, y = value)) +
              scales = "free_y",
              nrow = 1,
              labeller = as_labeller(c(
-               dist_mainland = "Distance to Mainland",
+               dist_mainland = "Dist. to Mainland",
                area = "Island Area",
-               max_elev = "Maximum Elevation",
+               max_elev = "Max. Elevation",
                mean_csi = "Mean CSI",
-               sd_csi = "Standard Dev. CSI",
+               Nearest_Dist = "Dist. Other Island",
+               sd_csi = "Std. Dev. CSI",
                TRI = "TRI"
                ))) +
   # Change per-plot x-axis labels
@@ -59,6 +62,7 @@ ggplot(m1, aes(x = archipelago, y = value)) +
   # Remove gridlines, add axes in gray
   theme(panel.grid = element_blank(),
         axis.line = element_line(colour = "gray70", linewidth = 0.5))
+# dev.off()
 
 ##### Plot just the range of the areas #####
 # Filter m1 to only include area

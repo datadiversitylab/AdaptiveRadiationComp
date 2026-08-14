@@ -2,6 +2,7 @@
 library(lme4)
 library(MuMIn)
 library(dplyr)
+library(performance)
 
 # Read dataset (assumes working directory is the root of the repo)
 dat <- read.csv("Summary_Files/IxL.csv")
@@ -141,7 +142,6 @@ barplot(import_vals, names.arg = names(var_import),
         main = "delta AIC < 4 subset",
         cex.names = 0.7)
 
-
 ##### Information Theoretic Model Selection: Richness as Response #####
 
 # Make sure that you're only using islands where the richness is > 0
@@ -234,3 +234,110 @@ barplot(import_vals, names.arg = names(var_import),
         xlab = "Predictors", ylab = "Variable Importance", 
         main = "delta AIC < 4 subset",
         cex.names = 0.7)
+
+# Check the deltaAIC4 models to see if there is overdispersion
+results <- rep(NA, length(deltaAIC4))
+for(i in c(1:24)){
+  results[i] <- check_overdispersion(deltaAIC4[[i]])$dispersion_ratio
+}
+
+##### OVERDISPERSION DETECTED, so re-run with negative binomial or Quasi-Poisson #####
+
+# Make sure that you're only using islands where the richness is > 0
+dat_scale <- dat_scale[which(dat_scale$richness > 0),]
+
+# Start with one variable, then systematically add the rest to the model
+
+var_vec <- c("TRI", "max_elev", "Nearest_Dist", 
+             "mean_csi", "sd_csi",
+             "n_habitat", "area", "dist_mainland",
+             "dist_occ_islands")
+
+# For counting loop iterations
+i <- 0
+
+# Create a list to store model objects
+model_list <- list()
+
+# The combn function generates all combinations of the elements of x
+#  taken m at a time. I can use this function if I iterate through
+#  var_vec using indices instead of names
+
+for(v in c(1:length(var_vec))){
+  # Gets all combinations up to the vth position
+  # simplify = FALSE so it returns a list
+  combos <- combn(var_vec, v, simplify = FALSE)
+  
+  for(var in combos){
+    # Write out current variable list separated by +'s for formula
+    current_vars <- paste(var, collapse = "+")
+    
+    # Next, write the whole formula
+    formula <- paste("richness ~", current_vars, "+ (1|archipelago)")
+    
+    # Have to convert to proper formula?
+    formula <- formula(formula)
+    
+    # Use the formula in a negative binomial GLMM
+    model <- glmer.nb(formula = formula, data = dat_scale)
+    
+    # Add model object to the list
+    i <- i + 1
+    model_list[[i]] <- model
+    print(i)
+  }
+}
+
+# Now use model.sel to select the best-supported model based on AICc
+selection <- model.sel(model_list)
+
+# The best model has a delta of 0 and is in the first row
+# This is model 183 from the list
+best <- model_list[[183]]
+# Formula: richness ~ TRI + n_habitat + area + dist_occ_islands + (1 | archipelago)
+
+R2 <- r.squaredGLMM(best)
+#           R2m       R2c
+# delta     0.4743864 0.7909979
+# lognormal 0.4853741 0.8093190
+# trigamma  0.4612106 0.7690284
+
+##### Richness: Models with deltaAIC < 4 #####
+close_models <- which(selection$delta < 4)
+close_models <- selection[close_models,]
+
+# The indices of these models are the rownames
+AIC4_models <- rownames(close_models)
+AIC4_models <- as.numeric(AIC4_models)
+
+# Now subset all_models list
+deltaAIC4 <- model_list[AIC4_models]
+
+# Calculate model-averaged coefficients
+avg_coeff_4 <- model.avg(deltaAIC4)
+summary(avg_coeff_4)
+
+coef(avg_coeff_4)
+
+# Calculate coefficient confidence intervals
+conf_int <- confint(avg_coeff_4)
+# n_habitat, area, dist_occ_islands are significant
+
+# Calculate variable importance (sum of model weights)
+var_import <- sw(deltaAIC4)
+#                      area n_habitat dist_occ_islands TRI  max_elev Nearest_Dist dist_mainland sd_csi mean_csi
+# Sum of weights:      1.00 1.00      0.99             0.54 0.44     0.42         0.42          0.19   0.18    
+# N containing models:   42   42        41               20   21       19           19            13     12  
+
+# Barplot
+import_vals <- c(1, 1, 0.99, 0.54, 0.44, 0.42, 0.42, 0.19, 0.18)
+barplot(import_vals, names.arg = names(var_import),
+        xlab = "Predictors", ylab = "Variable Importance", 
+        main = "delta AIC < 4 subset",
+        cex.names = 0.7)
+
+# No more overdispersion!
+results <- rep(NA, length(deltaAIC4))
+for(i in c(1:42)){
+  results[i] <- check_overdispersion(deltaAIC4[[i]])$dispersion_ratio
+}

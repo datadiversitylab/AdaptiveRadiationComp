@@ -103,7 +103,7 @@ for (i in seq_len(nrow(results))) {
 
 print(results)
 
-write.csv(results, "power/power_lineages.csv")
+write.csv(results, "power/power_lineages.csv", row.names = FALSE)
 
 # bp_in_range = FALSE means the archipelago has no islands near the threshold.
 # power < 0.8 means underpowered.

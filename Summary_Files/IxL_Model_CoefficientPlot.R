@@ -59,7 +59,7 @@ base_plot <- ggplot(combined_coef,
   scale_color_manual(values = c("Richness" = "#E69F00",
                                 "Presence" = "#56B4E9"),
                      breaks = c("Richness", "Presence")) +
-  labs(x = "Coefficient Estimate", y = NULL, color = "Response") +
+  labs(x = "Coefficient Estimate with 95% CI", y = NULL, color = "Response") +
   theme_minimal() +
   # Remove the grid  
   theme(panel.grid = element_blank(),
@@ -74,8 +74,12 @@ base_plot <- ggplot(combined_coef,
 
 # Maybe I should just restrict the width of the panels
 #   and add the regular legend back to where it was
+pdf("coefficientplot.pdf", width = 3, height = 8)
 facet_plot <- base_plot + 
   # Limit the size of each facet to the range of the CIs
   scale_x_continuous(limits = c(-1.7, 2.6)) #+
   # Add the legend
-  #theme(legend.position = "right")
+  # theme(legend.position = "right")
+facet_plot
+
+dev.off()

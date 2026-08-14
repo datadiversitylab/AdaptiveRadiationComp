@@ -30,7 +30,7 @@ galapagosarea <- galapagosarea[-duplicated(galapagosarea$name), "area"]
 hawaiiarea <- read.csv("Hawaiian/hawaii_total.csv")
 hawaiiarea <- hawaiiarea[-duplicated(hawaiiarea$name),"area"]
 
-caribbeanarea <- read.csv("Caribbean/carib_islands.csv")
+caribbeanarea <- read.csv("Caribbean/Data/carib_islands.csv")
 caribbeanarea <- caribbeanarea$area
 
 areas <- list(
@@ -112,7 +112,7 @@ for (i in seq_len(nrow(results))) {
 
 print(results)
 
-write.csv(results, "power/power_spar_lineages.csv")
+write.csv(results, "power/power_spar_lineages.csv", row.names = FALSE)
 
 # bp_in_range = FALSE means the archipelago has no islands near the threshold.
 # power < 0.8 means underpowered.

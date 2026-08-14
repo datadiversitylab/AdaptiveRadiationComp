@@ -7,10 +7,26 @@
 * "Galapagos" directory - Contains files specific to Galapagos finches and *Scalesia*. Includes two subdirectories: "Data" and "Shapefile"
   - "Data" directory - Includes raw data and R objects used in determining species-area relationships, speciation-area relationships, and taxon-specific distance metrics.
   - "Shapefile" directory - Includes files needed to read the shapefile for the Galapagos islands.
-* "habitat_diversity" directory - Contains files needed to estimate habitat heterogeneity for taxa of interest, along with IUCN shapefiles used to determine ranges (when applicable).
+* "habitat_diversity" directory - Contains files needed to estimate habitat heterogeneity for taxa of interest, along with IUCN shapefiles used to determine ranges (when applicable). Notable scripts include:
+  - 1_crop_habitat_raster.R - Crops the worldwide habitat raster to the archipelagos of interest.
+  - 2_habitat_diversity_lv2_island.R - Estimates habitat diversity for each lineage of interest for each island on which they are present.
+  - 3_habitat_diversity_island_notaxa.R - Estimates habitat diversity for each island within each archipelago of interest.
 * "Hawaiian" directory - Contains files specific to Hawaiian silverswords and *Tetragnatha*. Includes two subdirectories: "Data" and "Shapefile"
   - "Data" directory - Includes raw data and R objects used in determining species-area relationships, speciation-area relationships, and taxon-specific distance metrics.
   - "Shapefile" directory - Includes files needed to read the shapefile for the Hawaiian islands.
+* "power" directory - Contains the following files used to run the power analysis that determines the probability of finding breakpoints in SARs and SpARs.
+  - power.csv - A CSV containing the results of the SAR power analysis. Contains probabilities for finding a breakpoint with a positive second slope when archipelago-wide parameters are used.
+  - power_lineages.csv - A CSV containing the results of the SAR power analysis. Contains probabilities for finding a breakpoint with a positive second slope when lineage-specific parameters are used.
+  - power_null.csv - A CSV containing the results of a modified SAR power analysis that determines how often the null hypothesis is not rejected.
+  - power_sar.R - R script that determines probabilities for finding a breakpoint with a positive second slope when archipelago-wide parameters are used.
+  - power_sar_lineages.R - R script that determines probabilities for finding a breakpoint with a positive second slope when lineage-specific parameters are used.
+  - power_sar_null.R - R script that includes a modified SAR power analysis that determines how often the null hypothesis is not rejected.
+  - power_spar.csv - A CSV containing the results of the SpAR power analysis. Contains probabilities for finding a breakpoint with a positive second slope when archipelago-wide parameters are used.
+  - power_spar.R - R script that determines probabilities for finding a breakpoint with a positive second slope in SpARs when archipelago-wide parameters are used.
+  - power_spar_lineages.csv - A CSV containing the results of the SpAR power analysis. Contains probabilities for finding a breakpoint with a positive second slope when lineage-specific parameters are used.
+  - power_spar_lineages.R - R script that determines probabilities for finding a breakpoint with a positive second slope in SpARs when lineage-specific parameters are used.
+  - power_spar_null.csv - A CSV containing the results of a modified SpAR power analysis that determines how often the null hypothesis is not rejected.
+  - power_spar_null.R - R script that includes a modified SpAR power analysis that determines how often the null hypothesis is not rejected.
 * "Summary_Files" directory - Contains the following files used to generate data, R objects, and figures that represent the full dataset.
   - continents.rds – An R object containing spatial information related to the continents closest to the archipelagos of interest.
   - CSI.R - An R script that extracts Climate Shift Index values for all islands in the three archipelagos of interest
