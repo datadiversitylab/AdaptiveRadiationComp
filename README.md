@@ -7,7 +7,11 @@
 * "Galapagos" directory - Contains files specific to Galapagos finches and *Scalesia*. Includes two subdirectories: "Data" and "Shapefile"
   - "Data" directory - Includes raw data and R objects used in determining species-area relationships, speciation-area relationships, and taxon-specific distance metrics.
   - "Shapefile" directory - Includes files needed to read the shapefile for the Galapagos islands.
-* "habitat_diversity" directory - Contains files needed to estimate habitat heterogeneity for taxa of interest, along with IUCN shapefiles used to determine ranges (when applicable). Notable scripts include:
+* "habitat_diversity" directory - Contains files needed to estimate habitat heterogeneity for taxa of interest, along with IUCN shapefiles used to determine ranges (when applicable). 
+  - CaribbeanAnoles directory - Contains a shapefile of *Anolis* ranges gathered via IUCN.
+  - CaribbeanEleutherodactylus directory - Contains a shapefile of *Eleutherodactylus* ranges gathered via IUCN.
+  - GalapagosFinches directory - Contains a shapefile of Galapagos finch ranges gathered via IUCN.
+  - HawaiianAsteraceae directory - Contains a shapefile of Hawaiian *Asteraceae* ranges gathered via IUCN.
   - 1_crop_habitat_raster.R - Crops the worldwide habitat raster to the archipelagos of interest.
   - 2_habitat_diversity_lv2_island.R - Estimates habitat diversity for each lineage of interest for each island on which they are present.
   - 3_habitat_diversity_island_notaxa.R - Estimates habitat diversity for each island within each archipelago of interest.
