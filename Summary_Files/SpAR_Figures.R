@@ -6,6 +6,7 @@
 
 library(ggplot2)
 library(cowplot)
+library(ssarp)
 
 ##### SpARs with epsilon = 0 #####
 
@@ -78,7 +79,7 @@ af_SpAR <- ggplot(anole_SpAR$aggDF, aes(x = x, y = y)) +
   geom_point(data = frog_SpAR$aggDF, aes(x = x, y = y, color = "Eleutherodactylus")) +
   geom_line(data = newdat_frog, aes(x = x, y = fit, color = "Eleutherodactylus"), linewidth = 1) +
   labs(x = expression(paste("Island Area (", "km"^"2", ")")),
-       y = "Log(Diversification Rate)") +
+       y = "Diversification Rate") +
   # Add a legend
   scale_color_manual(
     name = NULL,
@@ -122,7 +123,7 @@ fs_SpAR <- ggplot(finch_SpAR$aggDF, aes(x = x, y = y)) +
   geom_point(data = scal_SpAR$aggDF, aes(x = x, y = y, color = "scal")) +
   geom_line(data = newdat_scal, aes(x = x, y = fit, color = "scal"), linewidth = 1) +
   labs(x = expression(paste("Island Area (", "km"^"2", ")")),
-       y = "Log(Diversification Rate)") +
+       y = "Diversification Rate") +
   # Add a legend
   scale_color_manual(
     name = NULL,
@@ -166,7 +167,7 @@ st_SpAR <- ggplot(silver_SpAR$aggDF, aes(x = x, y = y)) +
   geom_point(data = spider_SpAR$aggDF, aes(x = x, y = y, color = "spider")) +
   geom_line(data = newdat_spider, aes(x = x, y = fit, color = "spider"), linewidth = 1) +
   labs(x = expression(paste("Island Area (", "km"^"2", ")")),
-       y = "Log(Diversification Rate)") +
+       y = "Diversification Rate") +
   # Add a legend
   scale_color_manual(
     name = NULL,
@@ -209,7 +210,7 @@ showtext_auto()
 # Set the font theme outside of the grid so it applies to everything
 theme_set(theme_minimal(base_family = "noto"))
 
-# cairo_pdf("Figure3.pdf", width = 12, height = 4)
+# cairo_pdf("FigureS5.pdf", width = 12, height = 4)
 p <- plot_grid(af_SpAR,
           fs_SpAR,
           st_SpAR,
