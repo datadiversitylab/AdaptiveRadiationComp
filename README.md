@@ -1,4 +1,5 @@
-# Repo for Comparing Global Adaptive Radiations Through Species- and Speciation-Area Relationships
+# Decoupled drivers of presence, richness, and speciation in island adaptive radiations
+This GitHub repo contains R scripts and data necessary to replicate the analyses in our manuscript titled, "Decoupled drivers of presence, richness, and speciation in island adaptive radiations." 
 
 ## File Structure
 * "Caribbean" directory - Contains files specific to Caribbean *Anolis* and *Eleutherodactylus*. Includes two subdirectories: "Data" and "Shapefile"
